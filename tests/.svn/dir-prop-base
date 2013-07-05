@@ -1,0 +1,19 @@
+K 10
+svn:ignore
+V 247
+test_cartesian_nn
+test_kd_sqr
+test_spherical_nn
+test_kd_sph_isPointInRect
+Makefile.in
+Makefile
+.deps
+.libs
+test_cartesian_qnearest
+test_spherical_qnearest
+test_cartesian_range
+test_spherical_range
+test_cartesian_rectangle
+test_spherical_rectangle
+
+END

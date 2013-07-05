@@ -1,0 +1,57 @@
+\hypertarget{structpqueue}{
+\subsection{pqueue Struct Reference}
+\label{structpqueue}\index{pqueue@{pqueue}}
+}
+priority queue (min-max heap)  
+
+
+\subsubsection*{Data Fields}
+\begin{CompactItemize}
+\item 
+uint32\_\-t \hyperlink{structpqueue_f548d62a942f23741323c5905e185c1e}{size}
+\item 
+uint32\_\-t \hyperlink{structpqueue_e9ea5d268464de29da16f4b69128ffe3}{avail}
+\item 
+uint32\_\-t \hyperlink{structpqueue_9b4b17052da1f1d4a033b47dadf6131c}{step}
+\item 
+struct \hyperlink{structresItem}{resItem} $\ast$$\ast$ \hyperlink{structpqueue_357464d75571c70914c19cac81f6187f}{d}
+\end{CompactItemize}
+
+
+\subsubsection{Detailed Description}
+priority queue (min-max heap) 
+
+\subsubsection{Field Documentation}
+\hypertarget{structpqueue_f548d62a942f23741323c5905e185c1e}{
+\index{pqueue@{pqueue}!size@{size}}
+\index{size@{size}!pqueue@{pqueue}}
+\paragraph[size]{\setlength{\rightskip}{0pt plus 5cm}uint32\_\-t {\bf pqueue::size}}\hfill}
+\label{structpqueue_f548d62a942f23741323c5905e185c1e}
+
+
+current length of the queue \hypertarget{structpqueue_e9ea5d268464de29da16f4b69128ffe3}{
+\index{pqueue@{pqueue}!avail@{avail}}
+\index{avail@{avail}!pqueue@{pqueue}}
+\paragraph[avail]{\setlength{\rightskip}{0pt plus 5cm}uint32\_\-t {\bf pqueue::avail}}\hfill}
+\label{structpqueue_e9ea5d268464de29da16f4b69128ffe3}
+
+
+currently allocated queue elements \hypertarget{structpqueue_9b4b17052da1f1d4a033b47dadf6131c}{
+\index{pqueue@{pqueue}!step@{step}}
+\index{step@{step}!pqueue@{pqueue}}
+\paragraph[step]{\setlength{\rightskip}{0pt plus 5cm}uint32\_\-t {\bf pqueue::step}}\hfill}
+\label{structpqueue_9b4b17052da1f1d4a033b47dadf6131c}
+
+
+step size in which new elements are allocated \hypertarget{structpqueue_357464d75571c70914c19cac81f6187f}{
+\index{pqueue@{pqueue}!d@{d}}
+\index{d@{d}!pqueue@{pqueue}}
+\paragraph[d]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf resItem}$\ast$$\ast$ {\bf pqueue::d}\hspace{0.3cm}{\tt  \mbox{[}read\mbox{]}}}\hfill}
+\label{structpqueue_357464d75571c70914c19cac81f6187f}
+
+
+pointer to an array of result items 
+
+The documentation for this struct was generated from the following file:\begin{CompactItemize}
+\item 
+lib/\hyperlink{kdtree_8h}{kdtree.h}\end{CompactItemize}

@@ -1,0 +1,35 @@
+\hypertarget{kdtree__common_8c}{
+\subsection{lib/kdtree\_\-common.c File Reference}
+\label{kdtree__common_8c}\index{lib/kdtree\_\-common.c@{lib/kdtree\_\-common.c}}
+}
+Routines common to the Cartesian and spherical kd-tree versions. 
+
+\subsubsection*{Functions}
+\begin{CompactItemize}
+\item 
+void \hyperlink{kdtree__common_8c_13ef2f8b845d1b904f47a8954164521f}{kd\_\-destroyTree} (struct \hyperlink{structkdNode}{kdNode} $\ast$node, void($\ast$destr)(void $\ast$))
+\begin{CompactList}\small\item\em free the kd-tree data structure, \item\end{CompactList}\end{CompactItemize}
+
+
+\subsubsection{Detailed Description}
+Routines common to the Cartesian and spherical kd-tree versions. 
+
+
+
+\subsubsection{Function Documentation}
+\hypertarget{kdtree__common_8c_13ef2f8b845d1b904f47a8954164521f}{
+\index{kdtree\_\-common.c@{kdtree\_\-common.c}!kd\_\-destroyTree@{kd\_\-destroyTree}}
+\index{kd\_\-destroyTree@{kd\_\-destroyTree}!kdtree_common.c@{kdtree\_\-common.c}}
+\paragraph[kd\_\-destroyTree]{\setlength{\rightskip}{0pt plus 5cm}void kd\_\-destroyTree (struct {\bf kdNode} $\ast$ {\em node}, \/  void($\ast$)(void $\ast$) {\em destr})}\hfill}
+\label{kdtree__common_8c_13ef2f8b845d1b904f47a8954164521f}
+
+
+free the kd-tree data structure, 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em node}]the root node of the tree to be destroyed\item[{\em $\ast$destr}]a pointer to the destructor function for the data container.\end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]This function does not return a value \end{Desc}

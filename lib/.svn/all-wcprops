@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 33
+/libkdtree/!svn/ver/131/trunk/lib
+END
+COPYING.DJ
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/libkdtree/!svn/ver/50/trunk/lib/COPYING.DJ
+END
+kdtree.h
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/libkdtree/!svn/ver/131/trunk/lib/kdtree.h
+END
+pqueue.c
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/libkdtree/!svn/ver/57/trunk/lib/pqueue.c
+END
+kdtree_common.c
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/libkdtree/!svn/ver/93/trunk/lib/kdtree_common.c
+END
+kdtree_cartesian.c
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/libkdtree/!svn/ver/97/trunk/lib/kdtree_cartesian.c
+END
+pmergesort.c
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/libkdtree/!svn/ver/89/trunk/lib/pmergesort.c
+END
+Makefile.am
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/libkdtree/!svn/ver/79/trunk/lib/Makefile.am
+END
+qsort.c
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/libkdtree/!svn/ver/57/trunk/lib/qsort.c
+END
+kdtree_spherical.c
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/libkdtree/!svn/ver/131/trunk/lib/kdtree_spherical.c
+END
+pqueue.h
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/libkdtree/!svn/ver/50/trunk/lib/pqueue.h
+END

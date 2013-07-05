@@ -1,0 +1,109 @@
+\indexentry{kd\_\discretionary {-}{}{}thread\_\discretionary {-}{}{}data@{kd\_\discretionary {-}{}{}thread\_\discretionary {-}{}{}data}|hyperpage}{2}
+\indexentry{kdNode@{kdNode}|hyperpage}{2}
+\indexentry{kdNode@{kdNode}!location@{location}|hyperpage}{3}
+\indexentry{location@{location}!kdNode@{kdNode}|hyperpage}{3}
+\indexentry{kdNode@{kdNode}!min@{min}|hyperpage}{3}
+\indexentry{min@{min}!kdNode@{kdNode}|hyperpage}{3}
+\indexentry{kdNode@{kdNode}!max@{max}|hyperpage}{3}
+\indexentry{max@{max}!kdNode@{kdNode}|hyperpage}{3}
+\indexentry{kdNode@{kdNode}!split@{split}|hyperpage}{3}
+\indexentry{split@{split}!kdNode@{kdNode}|hyperpage}{3}
+\indexentry{kdNode@{kdNode}!data@{data}|hyperpage}{3}
+\indexentry{data@{data}!kdNode@{kdNode}|hyperpage}{3}
+\indexentry{kdNode@{kdNode}!left@{left}|hyperpage}{3}
+\indexentry{left@{left}!kdNode@{kdNode}|hyperpage}{3}
+\indexentry{kdNode@{kdNode}!right@{right}|hyperpage}{3}
+\indexentry{right@{right}!kdNode@{kdNode}|hyperpage}{3}
+\indexentry{pqueue@{pqueue}|hyperpage}{3}
+\indexentry{pqueue@{pqueue}!size@{size}|hyperpage}{4}
+\indexentry{size@{size}!pqueue@{pqueue}|hyperpage}{4}
+\indexentry{pqueue@{pqueue}!avail@{avail}|hyperpage}{4}
+\indexentry{avail@{avail}!pqueue@{pqueue}|hyperpage}{4}
+\indexentry{pqueue@{pqueue}!step@{step}|hyperpage}{4}
+\indexentry{step@{step}!pqueue@{pqueue}|hyperpage}{4}
+\indexentry{pqueue@{pqueue}!d@{d}|hyperpage}{4}
+\indexentry{d@{d}!pqueue@{pqueue}|hyperpage}{4}
+\indexentry{resItem@{resItem}|hyperpage}{4}
+\indexentry{resItem@{resItem}!node@{node}|hyperpage}{4}
+\indexentry{node@{node}!resItem@{resItem}|hyperpage}{4}
+\indexentry{resItem@{resItem}!dist\_\discretionary {-}{}{}sq@{dist\_\discretionary {-}{}{}sq}|hyperpage}{4}
+\indexentry{dist\_\discretionary {-}{}{}sq@{dist\_\discretionary {-}{}{}sq}!resItem@{resItem}|hyperpage}{4}
+\indexentry{lib/kdtree.h@{lib/kdtree.h}|hyperpage}{5}
+\indexentry{kdtree.h@{kdtree.h}!kd\_\discretionary {-}{}{}buildTree@{kd\_\discretionary {-}{}{}buildTree}|hyperpage}{6}
+\indexentry{kd\_\discretionary {-}{}{}buildTree@{kd\_\discretionary {-}{}{}buildTree}!kdtree.h@{kdtree.h}|hyperpage}{6}
+\indexentry{kdtree.h@{kdtree.h}!kd\_\discretionary {-}{}{}destroyTree@{kd\_\discretionary {-}{}{}destroyTree}|hyperpage}{7}
+\indexentry{kd\_\discretionary {-}{}{}destroyTree@{kd\_\discretionary {-}{}{}destroyTree}!kdtree.h@{kdtree.h}|hyperpage}{7}
+\indexentry{kdtree.h@{kdtree.h}!kd\_\discretionary {-}{}{}nearest@{kd\_\discretionary {-}{}{}nearest}|hyperpage}{7}
+\indexentry{kd\_\discretionary {-}{}{}nearest@{kd\_\discretionary {-}{}{}nearest}!kdtree.h@{kdtree.h}|hyperpage}{7}
+\indexentry{kdtree.h@{kdtree.h}!kd\_\discretionary {-}{}{}ortRangeSearch@{kd\_\discretionary {-}{}{}ortRangeSearch}|hyperpage}{7}
+\indexentry{kd\_\discretionary {-}{}{}ortRangeSearch@{kd\_\discretionary {-}{}{}ortRangeSearch}!kdtree.h@{kdtree.h}|hyperpage}{7}
+\indexentry{kdtree.h@{kdtree.h}!kd\_\discretionary {-}{}{}qnearest@{kd\_\discretionary {-}{}{}qnearest}|hyperpage}{8}
+\indexentry{kd\_\discretionary {-}{}{}qnearest@{kd\_\discretionary {-}{}{}qnearest}!kdtree.h@{kdtree.h}|hyperpage}{8}
+\indexentry{kdtree.h@{kdtree.h}!kd\_\discretionary {-}{}{}range@{kd\_\discretionary {-}{}{}range}|hyperpage}{8}
+\indexentry{kd\_\discretionary {-}{}{}range@{kd\_\discretionary {-}{}{}range}!kdtree.h@{kdtree.h}|hyperpage}{8}
+\indexentry{kdtree.h@{kdtree.h}!kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}buildTree@{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}buildTree}|hyperpage}{8}
+\indexentry{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}buildTree@{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}buildTree}!kdtree.h@{kdtree.h}|hyperpage}{8}
+\indexentry{kdtree.h@{kdtree.h}!kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}nearest@{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}nearest}|hyperpage}{9}
+\indexentry{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}nearest@{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}nearest}!kdtree.h@{kdtree.h}|hyperpage}{9}
+\indexentry{kdtree.h@{kdtree.h}!kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}ortRangeSearch@{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}ortRangeSearch}|hyperpage}{9}
+\indexentry{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}ortRangeSearch@{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}ortRangeSearch}!kdtree.h@{kdtree.h}|hyperpage}{9}
+\indexentry{kdtree.h@{kdtree.h}!kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}qnearest@{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}qnearest}|hyperpage}{9}
+\indexentry{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}qnearest@{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}qnearest}!kdtree.h@{kdtree.h}|hyperpage}{9}
+\indexentry{kdtree.h@{kdtree.h}!kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}range@{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}range}|hyperpage}{10}
+\indexentry{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}range@{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}range}!kdtree.h@{kdtree.h}|hyperpage}{10}
+\indexentry{kdtree.h@{kdtree.h}!kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}xtd@{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}xtd}|hyperpage}{10}
+\indexentry{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}xtd@{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}xtd}!kdtree.h@{kdtree.h}|hyperpage}{10}
+\indexentry{kdtree.h@{kdtree.h}!pqinit@{pqinit}|hyperpage}{10}
+\indexentry{pqinit@{pqinit}!kdtree.h@{kdtree.h}|hyperpage}{10}
+\indexentry{kdtree.h@{kdtree.h}!pqinsert@{pqinsert}|hyperpage}{10}
+\indexentry{pqinsert@{pqinsert}!kdtree.h@{kdtree.h}|hyperpage}{10}
+\indexentry{kdtree.h@{kdtree.h}!pqpeek\_\discretionary {-}{}{}max@{pqpeek\_\discretionary {-}{}{}max}|hyperpage}{11}
+\indexentry{pqpeek\_\discretionary {-}{}{}max@{pqpeek\_\discretionary {-}{}{}max}!kdtree.h@{kdtree.h}|hyperpage}{11}
+\indexentry{kdtree.h@{kdtree.h}!pqpeek\_\discretionary {-}{}{}min@{pqpeek\_\discretionary {-}{}{}min}|hyperpage}{11}
+\indexentry{pqpeek\_\discretionary {-}{}{}min@{pqpeek\_\discretionary {-}{}{}min}!kdtree.h@{kdtree.h}|hyperpage}{11}
+\indexentry{kdtree.h@{kdtree.h}!pqremove\_\discretionary {-}{}{}max@{pqremove\_\discretionary {-}{}{}max}|hyperpage}{11}
+\indexentry{pqremove\_\discretionary {-}{}{}max@{pqremove\_\discretionary {-}{}{}max}!kdtree.h@{kdtree.h}|hyperpage}{11}
+\indexentry{kdtree.h@{kdtree.h}!pqremove\_\discretionary {-}{}{}min@{pqremove\_\discretionary {-}{}{}min}|hyperpage}{12}
+\indexentry{pqremove\_\discretionary {-}{}{}min@{pqremove\_\discretionary {-}{}{}min}!kdtree.h@{kdtree.h}|hyperpage}{12}
+\indexentry{lib/kdtree\_\discretionary {-}{}{}cartesian.c@{lib/kdtree\_\discretionary {-}{}{}cartesian.c}|hyperpage}{12}
+\indexentry{kdtree\_\discretionary {-}{}{}cartesian.c@{kdtree\_\discretionary {-}{}{}cartesian.c}!kd\_\discretionary {-}{}{}buildTree@{kd\_\discretionary {-}{}{}buildTree}|hyperpage}{13}
+\indexentry{kd\_\discretionary {-}{}{}buildTree@{kd\_\discretionary {-}{}{}buildTree}!kdtree_cartesian.c@{kdtree\_\discretionary {-}{}{}cartesian.c}|hyperpage}{13}
+\indexentry{kdtree\_\discretionary {-}{}{}cartesian.c@{kdtree\_\discretionary {-}{}{}cartesian.c}!kd\_\discretionary {-}{}{}nearest@{kd\_\discretionary {-}{}{}nearest}|hyperpage}{13}
+\indexentry{kd\_\discretionary {-}{}{}nearest@{kd\_\discretionary {-}{}{}nearest}!kdtree_cartesian.c@{kdtree\_\discretionary {-}{}{}cartesian.c}|hyperpage}{13}
+\indexentry{kdtree\_\discretionary {-}{}{}cartesian.c@{kdtree\_\discretionary {-}{}{}cartesian.c}!kd\_\discretionary {-}{}{}ortRangeSearch@{kd\_\discretionary {-}{}{}ortRangeSearch}|hyperpage}{13}
+\indexentry{kd\_\discretionary {-}{}{}ortRangeSearch@{kd\_\discretionary {-}{}{}ortRangeSearch}!kdtree_cartesian.c@{kdtree\_\discretionary {-}{}{}cartesian.c}|hyperpage}{13}
+\indexentry{kdtree\_\discretionary {-}{}{}cartesian.c@{kdtree\_\discretionary {-}{}{}cartesian.c}!kd\_\discretionary {-}{}{}qnearest@{kd\_\discretionary {-}{}{}qnearest}|hyperpage}{14}
+\indexentry{kd\_\discretionary {-}{}{}qnearest@{kd\_\discretionary {-}{}{}qnearest}!kdtree_cartesian.c@{kdtree\_\discretionary {-}{}{}cartesian.c}|hyperpage}{14}
+\indexentry{kdtree\_\discretionary {-}{}{}cartesian.c@{kdtree\_\discretionary {-}{}{}cartesian.c}!kd\_\discretionary {-}{}{}range@{kd\_\discretionary {-}{}{}range}|hyperpage}{14}
+\indexentry{kd\_\discretionary {-}{}{}range@{kd\_\discretionary {-}{}{}range}!kdtree_cartesian.c@{kdtree\_\discretionary {-}{}{}cartesian.c}|hyperpage}{14}
+\indexentry{lib/kdtree\_\discretionary {-}{}{}common.c@{lib/kdtree\_\discretionary {-}{}{}common.c}|hyperpage}{14}
+\indexentry{kdtree\_\discretionary {-}{}{}common.c@{kdtree\_\discretionary {-}{}{}common.c}!kd\_\discretionary {-}{}{}destroyTree@{kd\_\discretionary {-}{}{}destroyTree}|hyperpage}{15}
+\indexentry{kd\_\discretionary {-}{}{}destroyTree@{kd\_\discretionary {-}{}{}destroyTree}!kdtree_common.c@{kdtree\_\discretionary {-}{}{}common.c}|hyperpage}{15}
+\indexentry{lib/kdtree\_\discretionary {-}{}{}spherical.c@{lib/kdtree\_\discretionary {-}{}{}spherical.c}|hyperpage}{15}
+\indexentry{kdtree\_\discretionary {-}{}{}spherical.c@{kdtree\_\discretionary {-}{}{}spherical.c}!kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}buildTree@{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}buildTree}|hyperpage}{16}
+\indexentry{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}buildTree@{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}buildTree}!kdtree_spherical.c@{kdtree\_\discretionary {-}{}{}spherical.c}|hyperpage}{16}
+\indexentry{kdtree\_\discretionary {-}{}{}spherical.c@{kdtree\_\discretionary {-}{}{}spherical.c}!kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}nearest@{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}nearest}|hyperpage}{16}
+\indexentry{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}nearest@{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}nearest}!kdtree_spherical.c@{kdtree\_\discretionary {-}{}{}spherical.c}|hyperpage}{16}
+\indexentry{kdtree\_\discretionary {-}{}{}spherical.c@{kdtree\_\discretionary {-}{}{}spherical.c}!kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}ortRangeSearch@{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}ortRangeSearch}|hyperpage}{16}
+\indexentry{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}ortRangeSearch@{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}ortRangeSearch}!kdtree_spherical.c@{kdtree\_\discretionary {-}{}{}spherical.c}|hyperpage}{16}
+\indexentry{kdtree\_\discretionary {-}{}{}spherical.c@{kdtree\_\discretionary {-}{}{}spherical.c}!kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}qnearest@{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}qnearest}|hyperpage}{16}
+\indexentry{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}qnearest@{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}qnearest}!kdtree_spherical.c@{kdtree\_\discretionary {-}{}{}spherical.c}|hyperpage}{16}
+\indexentry{kdtree\_\discretionary {-}{}{}spherical.c@{kdtree\_\discretionary {-}{}{}spherical.c}!kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}range@{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}range}|hyperpage}{17}
+\indexentry{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}range@{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}range}!kdtree_spherical.c@{kdtree\_\discretionary {-}{}{}spherical.c}|hyperpage}{17}
+\indexentry{kdtree\_\discretionary {-}{}{}spherical.c@{kdtree\_\discretionary {-}{}{}spherical.c}!kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}xtd@{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}xtd}|hyperpage}{17}
+\indexentry{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}xtd@{kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}xtd}!kdtree_spherical.c@{kdtree\_\discretionary {-}{}{}spherical.c}|hyperpage}{17}
+\indexentry{lib/pqueue.c@{lib/pqueue.c}|hyperpage}{17}
+\indexentry{pqueue.c@{pqueue.c}!pqinit@{pqinit}|hyperpage}{18}
+\indexentry{pqinit@{pqinit}!pqueue.c@{pqueue.c}|hyperpage}{18}
+\indexentry{pqueue.c@{pqueue.c}!pqinsert@{pqinsert}|hyperpage}{18}
+\indexentry{pqinsert@{pqinsert}!pqueue.c@{pqueue.c}|hyperpage}{18}
+\indexentry{pqueue.c@{pqueue.c}!pqpeek\_\discretionary {-}{}{}max@{pqpeek\_\discretionary {-}{}{}max}|hyperpage}{19}
+\indexentry{pqpeek\_\discretionary {-}{}{}max@{pqpeek\_\discretionary {-}{}{}max}!pqueue.c@{pqueue.c}|hyperpage}{19}
+\indexentry{pqueue.c@{pqueue.c}!pqpeek\_\discretionary {-}{}{}min@{pqpeek\_\discretionary {-}{}{}min}|hyperpage}{19}
+\indexentry{pqpeek\_\discretionary {-}{}{}min@{pqpeek\_\discretionary {-}{}{}min}!pqueue.c@{pqueue.c}|hyperpage}{19}
+\indexentry{pqueue.c@{pqueue.c}!pqremove\_\discretionary {-}{}{}max@{pqremove\_\discretionary {-}{}{}max}|hyperpage}{19}
+\indexentry{pqremove\_\discretionary {-}{}{}max@{pqremove\_\discretionary {-}{}{}max}!pqueue.c@{pqueue.c}|hyperpage}{19}
+\indexentry{pqueue.c@{pqueue.c}!pqremove\_\discretionary {-}{}{}min@{pqremove\_\discretionary {-}{}{}min}|hyperpage}{19}
+\indexentry{pqremove\_\discretionary {-}{}{}min@{pqremove\_\discretionary {-}{}{}min}!pqueue.c@{pqueue.c}|hyperpage}{19}
+\indexentry{tests/test\_\discretionary {-}{}{}cartesian\_\discretionary {-}{}{}nn.c@{tests/test\_\discretionary {-}{}{}cartesian\_\discretionary {-}{}{}nn.c}|hyperpage}{20}
+\indexentry{tests/test\_\discretionary {-}{}{}spherical\_\discretionary {-}{}{}nn.c@{tests/test\_\discretionary {-}{}{}spherical\_\discretionary {-}{}{}nn.c}|hyperpage}{20}

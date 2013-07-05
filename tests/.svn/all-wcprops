@@ -1,0 +1,171 @@
+K 26
+svn:wc:ra_dav:activity-url
+V 20
+/libkdtree/!svn/act/
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/libkdtree/!svn/ver/131/trunk/tests
+END
+points_eq.c
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/libkdtree/!svn/ver/101/trunk/tests/points_eq.c
+END
+test_cartesian_qnearest.sh
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/libkdtree/!svn/ver/112/trunk/tests/test_cartesian_qnearest.sh
+END
+naive_sph_ortRangeSearch.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/libkdtree/!svn/ver/124/trunk/tests/naive_sph_ortRangeSearch.c
+END
+test_spherical_qnearest.sh
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/libkdtree/!svn/ver/112/trunk/tests/test_spherical_qnearest.sh
+END
+test_cartesian_nn.c
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/libkdtree/!svn/ver/101/trunk/tests/test_cartesian_nn.c
+END
+test_spherical_nn.c
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/libkdtree/!svn/ver/122/trunk/tests/test_spherical_nn.c
+END
+create_pointlist.c
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/libkdtree/!svn/ver/101/trunk/tests/create_pointlist.c
+END
+test_cartesian_qnearest.c
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/libkdtree/!svn/ver/107/trunk/tests/test_cartesian_qnearest.c
+END
+test_spherical_qnearest.c
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/libkdtree/!svn/ver/122/trunk/tests/test_spherical_qnearest.c
+END
+test_cartesian_range.sh
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/libkdtree/!svn/ver/114/trunk/tests/test_cartesian_range.sh
+END
+sorted_queues_eq.c
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/libkdtree/!svn/ver/109/trunk/tests/sorted_queues_eq.c
+END
+test_spherical_range.sh
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/libkdtree/!svn/ver/118/trunk/tests/test_spherical_range.sh
+END
+unsorted_queues_eq.c
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/libkdtree/!svn/ver/120/trunk/tests/unsorted_queues_eq.c
+END
+test_kd_sph_isPointInRect.c
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/libkdtree/!svn/ver/123/trunk/tests/test_kd_sph_isPointInRect.c
+END
+test_kd_sqr.c
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/libkdtree/!svn/ver/96/trunk/tests/test_kd_sqr.c
+END
+kdtree_test.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/libkdtree/!svn/ver/124/trunk/tests/kdtree_test.h
+END
+test_cartesian_range.c
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/libkdtree/!svn/ver/114/trunk/tests/test_cartesian_range.c
+END
+test_cartesian_rectangle.sh
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/libkdtree/!svn/ver/120/trunk/tests/test_cartesian_rectangle.sh
+END
+test_spherical_range.c
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/libkdtree/!svn/ver/122/trunk/tests/test_spherical_range.c
+END
+test_spherical_rectangle.sh
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/libkdtree/!svn/ver/124/trunk/tests/test_spherical_rectangle.sh
+END
+test_kd_sph_isRectInRect.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/libkdtree/!svn/ver/127/trunk/tests/test_kd_sph_isRectInRect.c
+END
+Makefile.am
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/libkdtree/!svn/ver/131/trunk/tests/Makefile.am
+END
+naive_ortRangeSearch.c
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/libkdtree/!svn/ver/124/trunk/tests/naive_ortRangeSearch.c
+END
+test_cartesian_nn.sh
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/libkdtree/!svn/ver/105/trunk/tests/test_cartesian_nn.sh
+END
+test_spherical_nn.sh
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/libkdtree/!svn/ver/105/trunk/tests/test_spherical_nn.sh
+END
+test_cartesian_rectangle.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/libkdtree/!svn/ver/124/trunk/tests/test_cartesian_rectangle.c
+END
+test_spherical_rectangle.c
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/libkdtree/!svn/ver/131/trunk/tests/test_spherical_rectangle.c
+END

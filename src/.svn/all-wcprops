@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 32
+/libkdtree/!svn/ver/98/trunk/src
+END
+example_cartesian.c
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/libkdtree/!svn/ver/95/trunk/src/example_cartesian.c
+END
+example_spherical.c
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/libkdtree/!svn/ver/98/trunk/src/example_spherical.c
+END
+Makefile.am
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/libkdtree/!svn/ver/79/trunk/src/Makefile.am
+END

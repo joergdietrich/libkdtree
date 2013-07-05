@@ -1,0 +1,87 @@
+\contentsline {section}{\numberline {1}libkdtree - A C99 implementation of the kd-tree algorithm}{1}{section.1}
+\contentsline {subsection}{\numberline {1.1}Introduction}{1}{subsection.1.1}
+\contentsline {section}{\numberline {2}Data Structure Index}{1}{section.2}
+\contentsline {subsection}{\numberline {2.1}Data Structures}{1}{subsection.2.1}
+\contentsline {section}{\numberline {3}File Index}{2}{section.3}
+\contentsline {subsection}{\numberline {3.1}File List}{2}{subsection.3.1}
+\contentsline {section}{\numberline {4}Data Structure Documentation}{2}{section.4}
+\contentsline {subsection}{\numberline {4.1}kd\_\discretionary {-}{}{}thread\_\discretionary {-}{}{}data Struct Reference}{2}{subsection.4.1}
+\contentsline {subsubsection}{\numberline {4.1.1}Detailed Description}{2}{subsubsection.4.1.1}
+\contentsline {subsection}{\numberline {4.2}kdNode Struct Reference}{2}{subsection.4.2}
+\contentsline {subsubsection}{\numberline {4.2.1}Detailed Description}{3}{subsubsection.4.2.1}
+\contentsline {subsubsection}{\numberline {4.2.2}Field Documentation}{3}{subsubsection.4.2.2}
+\contentsline {paragraph}{\numberline {4.2.2.1}location}{3}{paragraph.4.2.2.1}
+\contentsline {paragraph}{\numberline {4.2.2.2}min}{3}{paragraph.4.2.2.2}
+\contentsline {paragraph}{\numberline {4.2.2.3}max}{3}{paragraph.4.2.2.3}
+\contentsline {paragraph}{\numberline {4.2.2.4}split}{3}{paragraph.4.2.2.4}
+\contentsline {paragraph}{\numberline {4.2.2.5}data}{3}{paragraph.4.2.2.5}
+\contentsline {paragraph}{\numberline {4.2.2.6}left}{3}{paragraph.4.2.2.6}
+\contentsline {paragraph}{\numberline {4.2.2.7}right}{3}{paragraph.4.2.2.7}
+\contentsline {subsection}{\numberline {4.3}pqueue Struct Reference}{3}{subsection.4.3}
+\contentsline {subsubsection}{\numberline {4.3.1}Detailed Description}{4}{subsubsection.4.3.1}
+\contentsline {subsubsection}{\numberline {4.3.2}Field Documentation}{4}{subsubsection.4.3.2}
+\contentsline {paragraph}{\numberline {4.3.2.1}size}{4}{paragraph.4.3.2.1}
+\contentsline {paragraph}{\numberline {4.3.2.2}avail}{4}{paragraph.4.3.2.2}
+\contentsline {paragraph}{\numberline {4.3.2.3}step}{4}{paragraph.4.3.2.3}
+\contentsline {paragraph}{\numberline {4.3.2.4}d}{4}{paragraph.4.3.2.4}
+\contentsline {subsection}{\numberline {4.4}resItem Struct Reference}{4}{subsection.4.4}
+\contentsline {subsubsection}{\numberline {4.4.1}Detailed Description}{4}{subsubsection.4.4.1}
+\contentsline {subsubsection}{\numberline {4.4.2}Field Documentation}{4}{subsubsection.4.4.2}
+\contentsline {paragraph}{\numberline {4.4.2.1}node}{4}{paragraph.4.4.2.1}
+\contentsline {paragraph}{\numberline {4.4.2.2}dist\_\discretionary {-}{}{}sq}{4}{paragraph.4.4.2.2}
+\contentsline {section}{\numberline {5}File Documentation}{5}{section.5}
+\contentsline {subsection}{\numberline {5.1}lib/kdtree.h File Reference}{5}{subsection.5.1}
+\contentsline {subsubsection}{\numberline {5.1.1}Detailed Description}{6}{subsubsection.5.1.1}
+\contentsline {subsubsection}{\numberline {5.1.2}Function Documentation}{6}{subsubsection.5.1.2}
+\contentsline {paragraph}{\numberline {5.1.2.1}kd\_\discretionary {-}{}{}buildTree}{6}{paragraph.5.1.2.1}
+\contentsline {paragraph}{\numberline {5.1.2.2}kd\_\discretionary {-}{}{}destroyTree}{7}{paragraph.5.1.2.2}
+\contentsline {paragraph}{\numberline {5.1.2.3}kd\_\discretionary {-}{}{}nearest}{7}{paragraph.5.1.2.3}
+\contentsline {paragraph}{\numberline {5.1.2.4}kd\_\discretionary {-}{}{}ortRangeSearch}{7}{paragraph.5.1.2.4}
+\contentsline {paragraph}{\numberline {5.1.2.5}kd\_\discretionary {-}{}{}qnearest}{8}{paragraph.5.1.2.5}
+\contentsline {paragraph}{\numberline {5.1.2.6}kd\_\discretionary {-}{}{}range}{8}{paragraph.5.1.2.6}
+\contentsline {paragraph}{\numberline {5.1.2.7}kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}buildTree}{8}{paragraph.5.1.2.7}
+\contentsline {paragraph}{\numberline {5.1.2.8}kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}nearest}{9}{paragraph.5.1.2.8}
+\contentsline {paragraph}{\numberline {5.1.2.9}kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}ortRangeSearch}{9}{paragraph.5.1.2.9}
+\contentsline {paragraph}{\numberline {5.1.2.10}kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}qnearest}{9}{paragraph.5.1.2.10}
+\contentsline {paragraph}{\numberline {5.1.2.11}kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}range}{10}{paragraph.5.1.2.11}
+\contentsline {paragraph}{\numberline {5.1.2.12}kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}xtd}{10}{paragraph.5.1.2.12}
+\contentsline {paragraph}{\numberline {5.1.2.13}pqinit}{10}{paragraph.5.1.2.13}
+\contentsline {paragraph}{\numberline {5.1.2.14}pqinsert}{11}{paragraph.5.1.2.14}
+\contentsline {paragraph}{\numberline {5.1.2.15}pqpeek\_\discretionary {-}{}{}max}{11}{paragraph.5.1.2.15}
+\contentsline {paragraph}{\numberline {5.1.2.16}pqpeek\_\discretionary {-}{}{}min}{11}{paragraph.5.1.2.16}
+\contentsline {paragraph}{\numberline {5.1.2.17}pqremove\_\discretionary {-}{}{}max}{11}{paragraph.5.1.2.17}
+\contentsline {paragraph}{\numberline {5.1.2.18}pqremove\_\discretionary {-}{}{}min}{12}{paragraph.5.1.2.18}
+\contentsline {subsection}{\numberline {5.2}lib/kdtree\_\discretionary {-}{}{}cartesian.c File Reference}{12}{subsection.5.2}
+\contentsline {subsubsection}{\numberline {5.2.1}Detailed Description}{12}{subsubsection.5.2.1}
+\contentsline {subsubsection}{\numberline {5.2.2}Function Documentation}{13}{subsubsection.5.2.2}
+\contentsline {paragraph}{\numberline {5.2.2.1}kd\_\discretionary {-}{}{}buildTree}{13}{paragraph.5.2.2.1}
+\contentsline {paragraph}{\numberline {5.2.2.2}kd\_\discretionary {-}{}{}nearest}{13}{paragraph.5.2.2.2}
+\contentsline {paragraph}{\numberline {5.2.2.3}kd\_\discretionary {-}{}{}ortRangeSearch}{13}{paragraph.5.2.2.3}
+\contentsline {paragraph}{\numberline {5.2.2.4}kd\_\discretionary {-}{}{}qnearest}{14}{paragraph.5.2.2.4}
+\contentsline {paragraph}{\numberline {5.2.2.5}kd\_\discretionary {-}{}{}range}{14}{paragraph.5.2.2.5}
+\contentsline {subsection}{\numberline {5.3}lib/kdtree\_\discretionary {-}{}{}common.c File Reference}{14}{subsection.5.3}
+\contentsline {subsubsection}{\numberline {5.3.1}Detailed Description}{15}{subsubsection.5.3.1}
+\contentsline {subsubsection}{\numberline {5.3.2}Function Documentation}{15}{subsubsection.5.3.2}
+\contentsline {paragraph}{\numberline {5.3.2.1}kd\_\discretionary {-}{}{}destroyTree}{15}{paragraph.5.3.2.1}
+\contentsline {subsection}{\numberline {5.4}lib/kdtree\_\discretionary {-}{}{}spherical.c File Reference}{15}{subsection.5.4}
+\contentsline {subsubsection}{\numberline {5.4.1}Detailed Description}{15}{subsubsection.5.4.1}
+\contentsline {subsubsection}{\numberline {5.4.2}Function Documentation}{16}{subsubsection.5.4.2}
+\contentsline {paragraph}{\numberline {5.4.2.1}kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}buildTree}{16}{paragraph.5.4.2.1}
+\contentsline {paragraph}{\numberline {5.4.2.2}kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}nearest}{16}{paragraph.5.4.2.2}
+\contentsline {paragraph}{\numberline {5.4.2.3}kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}ortRangeSearch}{16}{paragraph.5.4.2.3}
+\contentsline {paragraph}{\numberline {5.4.2.4}kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}qnearest}{17}{paragraph.5.4.2.4}
+\contentsline {paragraph}{\numberline {5.4.2.5}kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}range}{17}{paragraph.5.4.2.5}
+\contentsline {paragraph}{\numberline {5.4.2.6}kd\_\discretionary {-}{}{}sph\_\discretionary {-}{}{}xtd}{17}{paragraph.5.4.2.6}
+\contentsline {subsection}{\numberline {5.5}lib/pqueue.c File Reference}{17}{subsection.5.5}
+\contentsline {subsubsection}{\numberline {5.5.1}Detailed Description}{18}{subsubsection.5.5.1}
+\contentsline {subsubsection}{\numberline {5.5.2}Function Documentation}{18}{subsubsection.5.5.2}
+\contentsline {paragraph}{\numberline {5.5.2.1}pqinit}{18}{paragraph.5.5.2.1}
+\contentsline {paragraph}{\numberline {5.5.2.2}pqinsert}{18}{paragraph.5.5.2.2}
+\contentsline {paragraph}{\numberline {5.5.2.3}pqpeek\_\discretionary {-}{}{}max}{19}{paragraph.5.5.2.3}
+\contentsline {paragraph}{\numberline {5.5.2.4}pqpeek\_\discretionary {-}{}{}min}{19}{paragraph.5.5.2.4}
+\contentsline {paragraph}{\numberline {5.5.2.5}pqremove\_\discretionary {-}{}{}max}{19}{paragraph.5.5.2.5}
+\contentsline {paragraph}{\numberline {5.5.2.6}pqremove\_\discretionary {-}{}{}min}{20}{paragraph.5.5.2.6}
+\contentsline {subsection}{\numberline {5.6}tests/test\_\discretionary {-}{}{}cartesian\_\discretionary {-}{}{}nn.c File Reference}{20}{subsection.5.6}
+\contentsline {subsubsection}{\numberline {5.6.1}Detailed Description}{20}{subsubsection.5.6.1}
+\contentsline {subsection}{\numberline {5.7}tests/test\_\discretionary {-}{}{}spherical\_\discretionary {-}{}{}nn.c File Reference}{20}{subsection.5.7}
+\contentsline {subsubsection}{\numberline {5.7.1}Detailed Description}{20}{subsubsection.5.7.1}
