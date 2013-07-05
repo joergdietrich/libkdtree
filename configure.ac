@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(libkdtree, 0.4.3, dietrich@usm.lmu.de)
+AC_INIT(libkdtree, 0.4.3, astro@joergdietrich.com)
 AM_INIT_AUTOMAKE(foreign)
 AC_CONFIG_SRCDIR([lib/kdtree_common.c])
 AC_CONFIG_HEADER([config.h])
