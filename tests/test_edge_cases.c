@@ -39,7 +39,7 @@ main()
         }
     }
     last = -1;
-    for(i = 0; i < NITEMS; i++) {
+    for(i = 0; i < NITEMS / 2; i++) {
         if (!pqremove_min(q, &item) || item->dist_sq < last) {
             fprintf(stderr, "Queue out of order at item %d\n", i);
             exit(EXIT_FAILURE);
@@ -47,7 +47,9 @@ main()
         last = item->dist_sq;
         free(item);
     }
-    free(q->d);
-    free(q);
+
+    /* pqfree frees the items still in the queue */
+    pqfree(q);
+    pqfree(NULL);
     return 0;
 }

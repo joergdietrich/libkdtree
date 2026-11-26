@@ -199,22 +199,12 @@ main(int argc, char **argv)
     for(i = 1; i < result->size; i++) {
         fprintf(f, "%f\t%f\n", result->d[i]->node->location[0],
                 result->d[i]->node->location[1]);
-        /*
-         * Do not forget to free the memory. First free the heap
-         * element. Note that at this point the heap is destroyed. It
-         * does not fulfill the heap property anymore. 
-         */
-        free(result->d[i]);
     }
     fclose(f);
     /*
-     * Free the heap 
+     * Free the queue and any items still in it
      */
-    free(result->d);
-    /*
-     * Free the heap information structure 
-     */
-    free(result);
+    pqfree(result);
 
     printf("You can find the point list in ort_range_result.dat\n\n");
 
@@ -283,13 +273,9 @@ main(int argc, char **argv)
     }
     fclose(f);
     /*
-     * free the unused first heap element 
+     * Free the queue and any items still in it
      */
-    free(result->d);
-    /*
-     * and free the heap information structure 
-     */
-    free(result);
+    pqfree(result);
     printf("You can find the point list in range_result.dat.\n\n");
 
 
@@ -328,13 +314,9 @@ main(int argc, char **argv)
     }
     fclose(f);
     /*
-     * free the heap 
+     * Free the queue and any items still in it
      */
-    free(result->d);
-    /*
-     * and free the heap information structure 
-     */
-    free(result);
+    pqfree(result);
     printf("You can find the point list in qnearest_result.dat\n"
            "(these should be the exact same points as in range_result.dat\n"
            "but with order reversed).\n\n");

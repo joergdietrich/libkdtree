@@ -88,6 +88,7 @@ struct resItem **pqremove_min(struct pqueue *q, struct resItem **d);
 struct resItem **pqremove_max(struct pqueue *q, struct resItem **d);
 struct resItem **pqpeek_min(struct pqueue *q, struct resItem **d);
 struct resItem **pqpeek_max(struct pqueue *q, struct resItem **d);
+void pqfree(struct pqueue *q);
 
 
 /* general utility functions */

@@ -66,8 +66,7 @@ main(void)
                *(int *) item->node->data, sqrt(item->dist_sq));
         free(item);
     }
-    free(res->d);
-    free(res);
+    pqfree(res);
 
     kd_destroyTree(tree, free);
     return EXIT_SUCCESS;

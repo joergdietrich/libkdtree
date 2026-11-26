@@ -253,16 +253,11 @@ struct pqueue *
 kd_sph_ortRangeSearch(struct kdNode *node, float *min, float *max)
 {
     struct pqueue *res;
-    uint32_t i;
 
     if ((res = pqinit(NULL, 1)) == NULL)
         return NULL;
     if (!kd_sph_doOrtRangeSearch(node, min, max, res)) {
-        for(i = 0; i < res->size; i++) {
-            free(res->d[i]);
-        }
-        free(res->d);
-        free(res);
+        pqfree(res);
         return NULL;
     }
     return res;
@@ -411,16 +406,11 @@ kd_sph_qnearest(struct kdNode *node, float *p,
                 float *max_dist_sq, unsigned int q)
 {
     struct pqueue *res;
-    uint32_t i;
 
     if ((res = pqinit(NULL, q + 2)) == NULL)
         return NULL;
     if (!kd_sph_doQnearest(node, p, max_dist_sq, q + 1, res)) {
-        for(i = 0; i < res->size; i++) {
-            free(res->d[i]);
-        }
-        free(res->d);
-        free(res);
+        pqfree(res);
         return NULL;
     }
     return res;
@@ -570,16 +560,11 @@ struct pqueue *
 kd_sph_range(struct kdNode *node, float *p, float *max_dist_sq, int ordered)
 {
     struct pqueue *res;
-    uint32_t i;
 
     if ((res = pqinit(NULL, 1)) == NULL)
         return NULL;
     if (!kd_sph_doRange(node, p, max_dist_sq, res, ordered)) {
-        for(i = 0; i < res->size; i++) {
-            free(res->d[i]);
-        }
-        free(res->d);
-        free(res);
+        pqfree(res);
         return NULL;
     }
     return res;

@@ -535,3 +535,23 @@ pqpeek_max(struct pqueue *q, struct resItem **d)
     *d = q->d[get_max_index(q)];
     return d;
 }
+
+
+/*!
+ * \brief free a result queue and the items still in it
+ *
+ * \param q a queue returned by a search, or NULL. Items already taken
+ * out with pqremove_min() or pqremove_max() are the caller's to free.
+ */
+void
+pqfree(struct pqueue *q)
+{
+    uint32_t i;
+
+    if (!q)
+        return;
+    for(i = 1; i < q->size; i++)
+        free(q->d[i]);
+    free(q->d);
+    free(q);
+}
