@@ -7,9 +7,6 @@
 #include "pqueue.h"
 
 
-extern int pmergesort(void *base, size_t nmemb, size_t size,
-                      int (*compar) (const void *, const void *, int axis),
-                      int axis, int max_threads);
 
 
 /* ********************************************************************
@@ -89,18 +86,65 @@ kd_printTree(struct kdNode *node)
    Functions for building and destroying trees 
 
    ******************************************************************** */
-static int
-_compPoints(const void *p1, const void *p2, int axis)
+static void
+_swapPoints(struct kd_point *points, unsigned long i, unsigned long j)
 {
-    struct kd_point *a = (struct kd_point *) p1;
-    struct kd_point *b = (struct kd_point *) p2;
+    struct kd_point tmp = points[i];
 
-    if (a->point[axis] > b->point[axis])
-        return 1;
-    else if (a->point[axis] == b->point[axis])
-        return 0;
-    else
-        return -1;
+    points[i] = points[j];
+    points[j] = tmp;
+}
+
+/* Median of the coordinates of three points along axis */
+static float
+_median3(struct kd_point *points, unsigned long i, unsigned long j,
+         unsigned long k, int axis)
+{
+    float a = points[i].point[axis];
+    float b = points[j].point[axis];
+    float c = points[k].point[axis];
+
+    if (a < b)
+        return b < c ? b : (a < c ? c : a);
+    return a < c ? a : (b < c ? c : b);
+}
+
+/* Reorders the n points so that points[k] holds the point a full sort
+   along axis would put there, with no greater coordinate before it and
+   no smaller one after it. This is quickselect with a three-way
+   partition, which keeps runs of equal coordinates linear. */
+static void
+_selectPoint(struct kd_point *points, unsigned long n, unsigned long k,
+             int axis)
+{
+    unsigned long lo = 0, hi = n - 1;
+
+    while (lo < hi) {
+        float pivot = _median3(points, lo, lo + (hi - lo) / 2, hi, axis);
+        unsigned long lt = lo, i = lo, gt = hi;
+
+        /*
+         * Partition [lo, hi] into coordinates below the pivot at
+         * [lo, lt), equal to it at [lt, gt] and above it at (gt, hi].
+         * The pivot occurs in the range, so gt never drops below lo.
+         */
+        while (i <= gt) {
+            float x = points[i].point[axis];
+
+            if (x < pivot)
+                _swapPoints(points, lt++, i++);
+            else if (x > pivot)
+                _swapPoints(points, i, gt--);
+            else
+                i++;
+        }
+        if (k < lt)
+            hi = lt - 1;
+        else if (k > gt)
+            lo = gt + 1;
+        else
+            return;
+    }
 }
 
 /* Points the node at its slot of 3 * dim floats, which holds its
@@ -229,12 +273,11 @@ kd_doBuildTree(void *threadarg)
     }
 
     /*
-     * Sort along the split axis, with up to max_threads threads
+     * The median along the split axis becomes this node, with the
+     * points below it to its left and those above it to its right
      */
-    if (!pmergesort(a->points, a->nPoints, sizeof(struct kd_point),
-                    _compPoints, axis, a->max_threads))
-        return NULL;
     pivot = a->nPoints / 2;
+    _selectPoint(a->points, a->nPoints, pivot, axis);
     memcpy(node->location, a->points[pivot].point, box);
 
     /*

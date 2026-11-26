@@ -1,8 +1,6 @@
 libkdtree - A C99 implementation of the kd-tree algorithm
 Copyright (c) 2008-2026 Joerg Dietrich <astro@joergdietrich.com>
 
-qsort.c written and copyright 1994 by DJ Delorie
-
 This library is free software; you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License version 2
 as published by the Free Software Foundation.
