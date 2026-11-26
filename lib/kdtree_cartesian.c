@@ -33,64 +33,9 @@ kd_min(float x, float y)
 }
 
 
-/* ******************************************************************
-   
-   Functions for building and destroying trees 
-
-   ******************************************************************** */
-
-
-/*! \brief build kd-tree structure
- *
- * \param points an array of kd_points (struct with position vector
- * and data container).
- *
- * \param nPoints the length of the points array.
- *
- * \param constr a pointer to a void *constructor() function to include
- * the data container in the tree; optional, can be NULL
- *
- * \param destr a pointer to a void destructor() function to free()
- * the data containers in the tree; optional, can be NULL, but should
- * be given if the constr argument is non-NULL.
- *
- * \param min a vector with the minimum positions of the corners of the
- * hyperrectangle containing the data.
- *
- * \param max a vector with the maximum positions of the corners of
- * the hyperrectangle containing the data.
- *
- * \param dim the dimensionality of the data.
- *
- * \param max_threads the maximal number of threads spawned for
- * construction of the tree. The threads will be unbalanced if this is
- * not a power of 2.
- *
- * \return root node of the tree, NULL if points is empty or memory
- * runs out
- */
-struct kdNode *
-kd_buildTree(struct kd_point *points, unsigned long nPoints,
-             void *(*constr) (void *), void (*destr) (void *),
-             float *min, float *max, int dim, int max_threads)
-{
-    struct kd_thread_data *my_data;
-    struct kdNode *tree;
-
-    if (!points || nPoints == 0)
-        return NULL;
-    if ((my_data = kd_buildArg(points, nPoints, constr, destr, min, max, 0,
-                               max_threads, dim)) == NULL)
-        return NULL;
-    tree = kd_doBuildTree(my_data);
-    free(my_data);
-    return tree;
-}
-
-
 /* *******************************************************************
 
-   Functions for range searches 
+   Functions for range searches
   
    *******************************************************************
 */
