@@ -2,6 +2,8 @@ libkdtree - A C99 implementation of the kd-tree algorithm
 
 Jörg Dietrich <astro@joergdietrich.com>
 
+Documentation: https://joergdietrich.github.io/libkdtree/
+
 Introduction
 
 libkdtree provides a C99 implementation of kd-trees. Kd-trees are

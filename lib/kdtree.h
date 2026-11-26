@@ -13,9 +13,17 @@
 #include <string.h>
 
 
+/*!
+ * \struct kd_point
+ * \brief input point for building a tree
+ *
+ * The tree copies the coordinates, and copies the data only through
+ * the constructor passed to kd_buildTree() or kd_sph_buildTree(). The
+ * array of kd_points can be freed once the tree is built.
+ */
 typedef struct kd_point {
-    float *point;
-    void *data;
+    float *point;               /*!<vector of the point's coordinates */
+    void *data;                 /*!<optional data, handed to the constructor */
 } kd_point;
 
 /*!
