@@ -1,4 +1,4 @@
-libkdtree - ANSI C implementation of the kd-tree algorithm
+libkdtree - A C99 implementation of the kd-tree algorithm
 Copyright (c) 2008-2026 Joerg Dietrich <astro@joergdietrich.com>
 
 qsort.c written and copyright 1994 by DJ Delorie
