@@ -96,8 +96,9 @@ tests/test_spherical_rectangle.o
 tests/test_spherical_rectangle.sh.log
 tests/test_spherical_rectangle.sh.trs
 tests/unsorted_queues_eq.o
-doc/*
+doxygen-doc/
 texput.log
+compile
 
 .svn/
 src/*.dat
