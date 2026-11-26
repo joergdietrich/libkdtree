@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <kdtree.h>
-#include <pqueue.h>
+#include <kdtree_internal.h>
 
 #define NITEMS 100
 

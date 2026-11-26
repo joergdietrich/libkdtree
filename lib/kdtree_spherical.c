@@ -3,8 +3,15 @@
  *
  */
 
-#include "kdtree.h"
-#include "pqueue.h"
+#include "kdtree_internal.h"
+
+static int kd_sph_doOrtRangeSearch(struct kdNode *node, float *min,
+                                   float *max, struct pqueue *res);
+static int kd_sph_doQnearest(struct kdNode *node, float *p,
+                             float *max_dist_sq, unsigned int q,
+                             struct pqueue *res);
+static int kd_sph_doRange(struct kdNode *node, float *p, float *max_dist_sq,
+                          struct pqueue *res, int ordered);
 
 /* ********************************************************************
 
@@ -39,7 +46,7 @@ kd_sph_dist_sq(float *x, float *y)
     return kd_sqr(kd_sph_dist(x, y));
 }
 
-float
+static float
 kd_sph_bearing(float *p1, float *p2)
 {
     float x, y;
@@ -50,7 +57,7 @@ kd_sph_bearing(float *p1, float *p2)
 }
 
 
-/*! \brief Compute cross-track distance
+/* \brief Compute cross-track distance
  * \param p1 a point
  *
  * \param p2 a second point defining a great circle from p1
@@ -59,7 +66,7 @@ kd_sph_bearing(float *p1, float *p2)
  *
  * \return distance of p3 from the great circle connecting p1 and p2. 
  */
-float 
+static float
 kd_sph_xtd(float *p1, float *p2, float *p3)
 {
     float d13, theta13, theta12;
@@ -71,7 +78,7 @@ kd_sph_xtd(float *p1, float *p2, float *p3)
 }
 
 
-float
+static float
 kd_sph_orth_dist(float *p1, float *p2, int split)
 {
     float q[2];
@@ -211,7 +218,7 @@ kd_sph_isRectInRect(struct kdNode *node, float *min, float *max)
 /* Returns 1 if the hyperrectangle of node overlaps the HR described
    by the minimum and maximum vectors min and max. Returns 0
    otherwise. */
-int
+static int
 kd_sph_rectOverlapsRect(struct kdNode *node, float *min, float *max)
 {
     double lo[2], hi[2];
@@ -266,7 +273,7 @@ kd_sph_ortRangeSearch(struct kdNode *node, float *min, float *max)
 
 /* This is the orthogonal range search. Returns 1 if okay, 0 in case
    of problems. */
-int
+static int
 kd_sph_doOrtRangeSearch(struct kdNode *node, float *min, float *max,
                         struct pqueue *res)
 {
@@ -425,7 +432,7 @@ kd_sph_qnearest(struct kdNode *node, float *p,
  *
  * return 1 if okay, zero in case of problems
  */
-int
+static int
 kd_sph_doQnearest(struct kdNode *node, float *p, float *max_dist_sq,
                   unsigned int q, struct pqueue *res)
 {
@@ -572,7 +579,7 @@ kd_sph_range(struct kdNode *node, float *p, float *max_dist_sq, int ordered)
 
 
 /* This is the range search. Returns 1 if okay, 0 in case of problems */
-int
+static int
 kd_sph_doRange(struct kdNode *node, float *p, float *max_dist_sq,
                struct pqueue *res, int ordered)
 {

@@ -1,5 +1,4 @@
-#include <kdtree.h>
-#include <pqueue.h>
+#include <kdtree_internal.h>
 
 int 
 is_pointInRect(struct kd_point point, float *rect_min, float *rect_max,

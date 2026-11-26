@@ -3,8 +3,21 @@
  *
  */
 
-#include "kdtree.h"
-#include "pqueue.h"
+#include "kdtree_internal.h"
+
+/* Arguments for building a subtree, possibly in its own thread */
+struct kd_thread_data {
+    int max_threads;
+    struct kd_point *points;    /* points of the subtree */
+    unsigned long nPoints;      /* number of points */
+    void *(*constr) (void *);
+    struct kdNode *nodes;       /* the subtree's 2 * nPoints - 1 nodes */
+    float *coords;              /* their coordinates, 3 * dim per node */
+    int depth;
+    int dim;
+};
+
+static void *kd_doBuildTree(void *threadarg);
 
 
 
@@ -312,7 +325,7 @@ kd_buildTree(struct kd_point *points, unsigned long nPoints,
 /* Builds a subtree into the nodes and coordinates of a->nodes and
    a->coords, laid out in pre-order. The caller has placed the root of
    the subtree and filled in its box. */
-void *
+static void *
 kd_doBuildTree(void *threadarg)
 {
     struct kd_thread_data *a = threadarg;
@@ -388,31 +401,9 @@ kd_doBuildTree(void *threadarg)
     return child[0] && child[1] ? node : NULL;
 }
 
-/*!
- * \brief free a node made by kd_allocNode()
- *
- * \param node the node; nodes of a tree are freed with kd_destroyTree()
- *
- * \param destr optional destructor for the node's data
- */
-void
-kd_freeNode(kdNode *node, void (*destr) (void *))
-{
-    if (!node)
-        return;
-    if (destr && node->data)
-        destr(node->data);
-    free(node->location);
-    free(node);
-}
-
-/*!
- * \brief allocate a single node outside any tree
- *
- * \return the node, with its location at points[pivot] and its box
- * from min to max, or NULL if memory runs out. Free it with
- * kd_freeNode().
- */
+/* Allocates a single node outside any tree, with its location at
+   points[pivot] and its box from min to max. Returns NULL if memory
+   runs out. kd_destroyTree() frees the node. */
 struct kdNode *
 kd_allocNode(struct kd_point *points, unsigned long pivot,
              float *min, float *max, int axis, int dim)
@@ -455,7 +446,8 @@ kd_destroyTree(struct kdNode *node, void (*destr) (void *))
         _destroyData(node, destr);
 
     /* The root starts both the node and the coordinate block */
-    kd_freeNode(node, NULL);
+    free(node->location);
+    free(node);
 }
 
 /* end of tree construction and destruction */

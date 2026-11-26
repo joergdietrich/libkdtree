@@ -1,4 +1,4 @@
-#include <kdtree.h>
+#include <kdtree_internal.h>
 
 #include "kdtree_test.h"
 
