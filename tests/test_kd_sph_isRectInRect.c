@@ -7,7 +7,7 @@
 #define M_PI           3.14159265358979323846  /* pi */
 #endif
 
-#define NTESTS (3)
+#define NTESTS (5)
 
 int
 main()
@@ -16,12 +16,18 @@ main()
 	{6./9. * M_PI, 5./18. * M_PI},
 	{6./9. * M_PI, 5./18. * M_PI},
 	/* small rectangle, meridian */
-	{-2./36 * M_PI, -1./18. * M_PI}};
+	{-2./36 * M_PI, -1./18. * M_PI},
+	{-2./36 * M_PI, -1./18. * M_PI},
+	/* wide rectangle, meridian */
+	{-3., -0.1}};
     float maxList[NTESTS][2] = {/* small rectangle, no meridian */
 	{7./9. * M_PI, 7./18. * M_PI},
 	{7./9. * M_PI, 7./18. * M_PI},
 	/* small rectangle, meridian */
-	{1./36. * M_PI, 2./18. * M_PI}};
+	{1./36. * M_PI, 2./18. * M_PI},
+	{1./36. * M_PI, 2./18. * M_PI},
+	/* wide rectangle, meridian */
+	{3.1, 0.1}};
 
     float minListTest[NTESTS][2] = {/* small rectangle contained */
 	{6.2/9. * M_PI, 5.5/18. * M_PI},
@@ -30,7 +36,9 @@ main()
     	/* small rectangle, meridian, contained */
 	{-1./36. * M_PI, 0},
     	/* small rectangle, meridian, uncontained (bottom) */
-	{-1./36. * M_PI, -2./18. * M_PI}};
+	{-1./36. * M_PI, -2./18. * M_PI},
+	/* straddles RA = pi, both ends inside but middle outside */
+	{3., -0.05}};
 
     float maxListTest[NTESTS][2] = {/* small rectangle contained */
 	{6.8/9. * M_PI, 6.5/18. * M_PI},
@@ -39,7 +47,9 @@ main()
     	/* small rectangle, meridian, contained */
 	{0.5/36. * M_PI, 1./18. * M_PI},
     	/* small rectangle, meridian, uncontained (bottom) */
-	{0.5/36. * M_PI, 1./18. * M_PI}};
+	{0.5/36. * M_PI, 1./18. * M_PI},
+	/* straddles RA = pi, both ends inside but middle outside */
+	{3.3, 0.05}};
 
     short int truthList[NTESTS] = {
 	/* small rectangle, no meridian, contained */
@@ -49,6 +59,8 @@ main()
     	/* small rectangle, meridian, contained */
 	1,
     	/* small rectangle, meridian, uncontained (bottom) */
+	0,
+	/* straddles RA = pi, both ends inside but middle outside */
 	0};
 
 

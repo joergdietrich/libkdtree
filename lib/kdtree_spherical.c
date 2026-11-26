@@ -11,35 +11,32 @@
    general utility functions 
 
    ********************************************************************* */
-inline float
-kd_sph_dist_sq(float *x, float *y)
-{
-    float ds;
-    /*float arg;*/
 
-    if (!x || !y)
-        return -1;
-
-    ds = acos(sin(x[1]) * sin(y[1]) +
-               cos(x[1]) * cos(y[1]) * cos(x[0] - y[0]));
-    /*    arg = sqrt(kd_sqr(sin((x[1] - y[1])/2)) + cos(x[1]) * cos(y[1]) *
-	       kd_sqr(sin((x[0] - y[0])/2)));
-	       ds = 2 * asin(arg);
-    */
-    return kd_sqr(ds);
-}
-
+/* Great-circle distance by the haversine formula, which stays
+   accurate for small separations. */
 inline float
 kd_sph_dist(float *x, float *y)
 {
-    float ds;
+    double sdec, sra, h;
 
     if (!x || !y)
         return -1;
 
-    ds = acos(sin(x[1]) * sin(y[1]) +
-               cos(x[1]) * cos(y[1]) * cos(x[0] - y[0]));
-    return ds;
+    sdec = sin((x[1] - y[1]) / 2);
+    sra = sin((x[0] - y[0]) / 2);
+    h = sdec * sdec + cos(x[1]) * cos(y[1]) * sra * sra;
+
+    /* Rounding can push h past 1 for antipodal points */
+    return 2 * asin(sqrt(fmin(h, 1.0)));
+}
+
+inline float
+kd_sph_dist_sq(float *x, float *y)
+{
+    if (!x || !y)
+        return -1;
+
+    return kd_sqr(kd_sph_dist(x, y));
 }
 
 float
@@ -77,20 +74,16 @@ kd_sph_xtd(float *p1, float *p2, float *p3)
 float
 kd_sph_orth_dist(float *p1, float *p2, int split)
 {
-
-    float ra2, dec2;
-    float dx;
+    float q[2];
 
     if (split == 1) {
-        ra2 = p1[0];
-        dec2 = p2[1];
+        q[0] = p1[0];
+        q[1] = p2[1];
     } else {
-        ra2 = p2[0];
-        dec2 = p1[1];
+        q[0] = p2[0];
+        q[1] = p1[1];
     }
-    dx = acos(sin(p1[1]) * sin(dec2) +
-              cos(p1[1]) * cos(dec2) * cos(p1[0] - ra2));
-    return dx;
+    return kd_sph_dist(p1, q);
 }
 
 /* end utility functions */
@@ -153,27 +146,48 @@ kd_sph_buildTree(struct kd_point *points, unsigned long nPoints,
    *******************************************************************
 */
 
+/* A query rectangle with min[0] < 0 wraps around RA = 0 and sees
+   RA > pi as negative. Returns ra in the frame of that rectangle. */
+static double
+_sph_queryRA(double ra, float *min)
+{
+    return (min[0] < 0 && ra > M_PI) ? ra - 2 * M_PI : ra;
+}
+
+/* Maps the RA extent of node into the frame of the query rectangle
+   with lower corner min. An extent that straddles the wrap at RA = pi
+   splits in two. Writes the intervals to lo and hi and returns their
+   number. */
+static int
+_sph_nodeRA(struct kdNode *node, float *min, double *lo, double *hi)
+{
+    if (min[0] < 0 && node->min[0] <= M_PI && node->max[0] > M_PI) {
+        lo[0] = node->min[0];
+        hi[0] = M_PI;
+        lo[1] = -M_PI;
+        hi[1] = node->max[0] - 2 * M_PI;
+        return 2;
+    }
+    lo[0] = _sph_queryRA(node->min[0], min);
+    hi[0] = _sph_queryRA(node->max[0], min);
+    return 1;
+}
+
 /* Returns 1 if node is a point in the hyperrectangle defined by
    minimum and maximum vectors min and max. */
 int
 kd_sph_isPointInRect(struct kdNode *node, float *min, float *max)
 {
+    double ra;
+
     if (node == NULL)
         return 0;
 
     if (node->location[1] < min[1] || node->location[1] > max[1])
-	return 0;
+        return 0;
 
-    if (min[0] < 0 && node->location[0] > M_PI) {
-	if (node->location[0] - 2 * M_PI < min[0] || 
-	    node->location[0] - 2 * M_PI > max[0])
-	    return 0;
-    } else {
-	if (node->location[0] < min[0] || node->location[0] > max[0]) 
-	    return 0;
-    }
-    
-    return 1;
+    ra = _sph_queryRA(node->location[0], min);
+    return ra >= min[0] && ra <= max[0];
 }
 
 /* Returns 1 if the hyperrectangle of node is fully contained within
@@ -182,68 +196,20 @@ kd_sph_isPointInRect(struct kdNode *node, float *min, float *max)
 int
 kd_sph_isRectInRect(struct kdNode *node, float *min, float *max)
 {
+    double lo[2], hi[2];
+    int i, n;
+
     if (node == NULL)
         return 0;
 
-    /* if (min[0] < 0 && node->min[0] > M_PI) {
-	if (node->min[0] - 2 * M_PI < min[0] || node->max[0] > max[0])
-	    return 0;
-    } else {
-	if (node->min[0] < min[0] || node->max[0] > max[0] )
-	    return 0;
-    }
     if (node->min[1] < min[1] || node->max[1] > max[1])
-	return 0;
-    */
-    
-    /* If node is fully contained all corners must be points inside
-       the rectangle */ 
-    struct kd_point *point;
-    struct kdNode *tmpNode;
-    point = kd_malloc(sizeof(kd_point), "kd_point in RectInRect");
-    point->point = kd_malloc(2 * sizeof(float), 
-			     "point position in RectInRect");
-    point->data = NULL;
-    point->point[0] = node->min[0];
-    point->point[1] = node->min[1];
-    tmpNode = kd_allocNode(point, 0, point->point, point->point, 0, 2);
-    if (!kd_sph_isPointInRect(tmpNode, min, max)) {
-	kd_destroyTree(tmpNode, NULL);	
-	free(point->point);
-	free(point);
-	return 0;
-    }
-    point->point[0] = node->min[0];
-    point->point[1] = node->max[1];
-    tmpNode = kd_allocNode(point, 0, point->point, point->point, 0, 2);
-    if (!kd_sph_isPointInRect(tmpNode, min, max)) {
-	kd_destroyTree(tmpNode, NULL);	
-	free(point->point);
-	free(point);
-	return 0;
-    }
-    point->point[0] = node->max[0];
-    point->point[1] = node->min[1];
-    tmpNode = kd_allocNode(point, 0, point->point, point->point, 0, 2);
-    if (!kd_sph_isPointInRect(tmpNode, min, max)) {
-	kd_destroyTree(tmpNode, NULL);	
-	free(point->point);
-	free(point);
-	return 0;
-    }
-    point->point[0] = node->max[0];
-    point->point[1] = node->max[1];
-    tmpNode = kd_allocNode(point, 0, point->point, point->point, 0, 2);
-    if (!kd_sph_isPointInRect(tmpNode, min, max)) {
-	kd_destroyTree(tmpNode, NULL);	
-	free(point->point);
-	free(point);
-	return 0;
-    }
-    kd_destroyTree(tmpNode, NULL);	
-    free(point->point);
-    free(point);
+        return 0;
 
+    n = _sph_nodeRA(node, min, lo, hi);
+    for(i = 0; i < n; i++) {
+        if (lo[i] < min[0] || hi[i] > max[0])
+            return 0;
+    }
     return 1;
 }
 
@@ -253,16 +219,21 @@ kd_sph_isRectInRect(struct kdNode *node, float *min, float *max)
 int
 kd_sph_rectOverlapsRect(struct kdNode *node, float *min, float *max)
 {
+    double lo[2], hi[2];
+    int i, n;
+
     if (node == NULL)
         return 0;
 
     if (node->min[1] > max[1] || node->max[1] < min[1])
-	return 0;
+        return 0;
 
-    if ((node->min[0]> max[0]) || (node->max[0] <  min[0]))
-	return 0;
-
-    return 1;
+    n = _sph_nodeRA(node, min, lo, hi);
+    for(i = 0; i < n; i++) {
+        if (lo[i] <= max[0] && hi[i] >= min[0])
+            return 1;
+    }
+    return 0;
 }
 
 
@@ -280,7 +251,8 @@ kd_sph_rectOverlapsRect(struct kdNode *node, float *min, float *max)
  *
  * \return  Pointer to a priority queue, NULL in case of problems.
  *
- * Rectangle must not cross the meridian!
+ * A rectangle that crosses RA = 0 is given with min[0] < 0. RA values
+ * above pi then count as negative.
 */
 struct pqueue *
 kd_sph_ortRangeSearch(struct kdNode *node, float *min, float *max)

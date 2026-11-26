@@ -61,10 +61,7 @@ main(int argc, char **argv)
 		    rect_min[1] = point[1] - dy[j];
 		    rect_max[0] = point[0] + dx[i];
 		    rect_max[1] = point[1] + dy[j];
-		    /* Ensure orthogonal ranges don't go outside the boundary 
-		     */
-		    if (rect_min[0] < 0)
-			rect_min[0] = 0;
+		    /* rect_min[0] < 0 exercises rectangles crossing RA = 0 */
 		    if (rect_max[0] > 2 * M_PI)
 			rect_max[0] = 2 * M_PI;
 		    /* Ensure orthogonal ranges don't go over the poles */
