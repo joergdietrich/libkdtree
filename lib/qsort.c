@@ -34,10 +34,15 @@
 #define		THRESH		4       /* threshold for insertion */
 #define		MTHRESH		6       /* threshold for median */
 
-static int (*qcmp) (const void *, const void *, int axis);      /* the comparison routine */
-static int qsz;                 /* size of each record */
-static int thresh;              /* THRESHold in chars */
-static int mthresh;             /* MTHRESHold in chars */
+/* Parameters of one sort, shared by qsortR and qst. They live on the
+   caller's stack so that several threads can sort at once. */
+struct qparams {
+    int (*qcmp) (const void *, const void *, int axis); /* the comparison routine */
+    int qsz;                    /* size of each record */
+    int thresh;                 /* THRESHold in chars */
+    int mthresh;                /* MTHRESHold in chars */
+    int axis;                   /* passed through to qcmp */
+};
 
 void qsortR(const void *base0, size_t n, size_t size,
             int (*compar) (const void *, const void *, int), int axis);
@@ -58,8 +63,11 @@ void qsortR(const void *base0, size_t n, size_t size,
  */
 
 static void
-qst(char *base, char *max, int axis)
+qst(const struct qparams *q, char *base, char *max)
 {
+    int (*qcmp) (const void *, const void *, int) = q->qcmp;
+    int qsz = q->qsz, thresh = q->thresh, mthresh = q->mthresh;
+    int axis = q->axis;
     char c, *i, *j, *jj;
     int ii;
     char *mid, *tmp;
@@ -152,12 +160,12 @@ qst(char *base, char *max, int axis)
         i = (j = mid) + qsz;
         if ((lo = j - base) <= (hi = max - i)) {
             if (lo >= thresh)
-                qst(base, j, axis);
+                qst(q, base, j);
             base = i;
             lo = hi;
         } else {
             if (hi >= thresh)
-                qst(i, max, axis);
+                qst(q, i, max);
             max = j;
         }
     } while (lo >= thresh);
@@ -177,16 +185,20 @@ qsortR(const void *base0, size_t n, size_t size,
     char *base = (char *) base0;
     char c, *i, *j, *lo, *hi;
     char *min, *max;
+    struct qparams q;
+    int (*qcmp) (const void *, const void *, int) = compar;
+    int qsz = size, thresh = size * THRESH;
 
     if (n <= 1)
         return;
-    qsz = size;
-    qcmp = compar;
-    thresh = qsz * THRESH;
-    mthresh = qsz * MTHRESH;
+    q.qcmp = compar;
+    q.qsz = qsz;
+    q.thresh = thresh;
+    q.mthresh = qsz * MTHRESH;
+    q.axis = axis;
     max = base + n * qsz;
     if (n >= THRESH) {
-        qst(base, max, axis);
+        qst(&q, base, max);
         hi = base + thresh;
     } else {
         hi = max;

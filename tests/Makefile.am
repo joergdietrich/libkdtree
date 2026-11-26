@@ -12,6 +12,7 @@ EXTRA_DIST = test_cartesian_nn.sh \
 	test_spherical_qnearest.sh
 
 TESTS = test_kd_sqr \
+	test_edge_cases \
 	test_kd_sph_dist \
 	test_kd_sph_isPointInRect \
 	test_kd_sph_isRectInRect \
@@ -25,6 +26,7 @@ TESTS = test_kd_sqr \
 	test_spherical_qnearest.sh
 
 check_PROGRAMS = test_kd_sqr \
+	test_edge_cases \
 	test_kd_sph_dist \
 	test_kd_sph_isPointInRect \
 	test_kd_sph_isRectInRect \
@@ -38,6 +40,7 @@ check_PROGRAMS = test_kd_sqr \
 	test_spherical_qnearest
 
 test_kd_sqr_SOURCES =  test_kd_sqr.c
+test_edge_cases_SOURCES = test_edge_cases.c
 test_kd_sph_dist_SOURCES = test_kd_sph_dist.c
 test_kd_sph_isPointInRect_SOURCES = test_kd_sph_isPointInRect.c
 test_kd_sph_isRectInRect_SOURCES = test_kd_sph_isRectInRect.c 

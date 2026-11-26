@@ -363,7 +363,8 @@ trickle_down_min(struct pqueue *q, uint32_t i)
  *
  * \param n the number of queue items for which memory should be
  * preallocated. If you insert more than n items to the queue,
- * another n items will be allocated automatically.
+ * another n items will be allocated automatically. An n of 0 counts
+ * as 1.
  *
  * \return Pointer to priority queue, NULL in case of error.
  *
@@ -373,6 +374,9 @@ pqinit(struct pqueue *q, uint32_t n)
 {
     struct pqueue *tmp = q;
 
+    /* The queue grows in steps of n, so n must not be 0 */
+    if (n == 0)
+        n = 1;
     if (!q && !(q = malloc(sizeof(struct pqueue)))) {
         return NULL;
     }
