@@ -99,3 +99,5 @@ tests/unsorted_queues_eq.o
 doc/*
 texput.log
 
+.svn/
+src/*.dat

@@ -1,6 +1,6 @@
 /*! \mainpage libkdtree - A C99 implementation of the kd-tree algorithm
  *
- * \author Jörg Dietrich <jorgd@umich.edu>
+ * \author Jörg Dietrich <astro@joergdietrich.com>
  *
  * \section Introduction
  *
