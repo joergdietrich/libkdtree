@@ -1,5 +1,7 @@
 #include <kdtree_internal.h>
 
+#include "kdtree_test.h"
+
 int 
 is_pointInRect(struct kd_point point, float *rect_min, float *rect_max,
 	       unsigned short dim)
@@ -27,16 +29,8 @@ naive_ortRangeSearch(struct kd_point *pointlist, unsigned int npoints,
     }
     for(i=0; i<npoints; i++) {
 	if (is_pointInRect(pointlist[i], rect_min, rect_max, dim)) {
-	    if ((point = kd_malloc(sizeof(struct resItem), 
-				   "naive_ortRangeSearch: ")) == NULL)
-                return NULL;
-            if ((point->node = kd_allocNode(pointlist, i, 
-                                            /* 2 dummies */
-                                            pointlist[i].point, 
-                                            pointlist[i].point,
-                                            -1, dim)) == NULL)
-                return NULL;
-	    point->dist_sq = -1;
+	    if ((point = naive_item(pointlist[i].point, -1)) == NULL)
+		return NULL;
             pqinsert(res, point);
 	}
     }

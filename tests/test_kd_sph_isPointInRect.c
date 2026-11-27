@@ -140,5 +140,7 @@ main()
 	}
 	kd_destroyTree(node, NULL);
     }
+    free(point->point);
+    free(point);
     return 0;
 }

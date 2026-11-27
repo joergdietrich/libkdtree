@@ -1,6 +1,9 @@
 struct kd_point *create_pointlist(unsigned long npoints, float *min, 
 				  float *max, unsigned short dim);
+void free_pointlist(struct kd_point *pointlist, unsigned long npoints);
+struct resItem *naive_item(float *location, float dist_sq);
 int points_eq(struct kdNode *nkd, float *nn, unsigned short dim);
+/* Both compare functions free the queues and their items. */
 int sorted_queues_eq(struct pqueue *q1, struct pqueue *q2, unsigned short dim);
 int  unsorted_queues_eq(struct pqueue *p1, struct pqueue *p2, 
 			unsigned short dim);

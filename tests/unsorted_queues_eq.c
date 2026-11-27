@@ -22,5 +22,11 @@ unsorted_queues_eq(struct pqueue *p1, struct pqueue *p2, unsigned short dim)
 	p2->d[i]->dist_sq = kd_dist_sq(p2->d[i]->node->location, ref, dim);
 	pqinsert(s2, p2->d[i]);
     }
+    free(ref);
+
+    /* s1 and s2 now hold the items, so free only the queues */
+    p1->size = p2->size = 1;
+    pqfree(p1);
+    pqfree(p2);
     return sorted_queues_eq(s1, s2, dim);
 }

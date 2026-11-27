@@ -54,16 +54,16 @@ test_cartesian_nn_SOURCES = test_cartesian_nn.c create_pointlist.c \
 	points_eq.c kdtree_test.h
 test_cartesian_rectangle_SOURCES = test_cartesian_rectangle.c \
 	create_pointlist.c sorted_queues_eq.c unsorted_queues_eq.c \
-	naive_ortRangeSearch.c
+	naive_ortRangeSearch.c naive_item.c
 test_cartesian_qnearest_SOURCES = test_cartesian_qnearest.c \
-	create_pointlist.c sorted_queues_eq.c
+	create_pointlist.c sorted_queues_eq.c naive_item.c
 test_cartesian_range_SOURCES = test_cartesian_range.c create_pointlist.c \
-	sorted_queues_eq.c	
+	sorted_queues_eq.c naive_item.c
 test_spherical_nn_SOURCES = test_spherical_nn.c create_pointlist.c points_eq.c
 test_spherical_rectangle_SOURCES = test_spherical_rectangle.c \
 	create_pointlist.c sorted_queues_eq.c unsorted_queues_eq.c \
-	naive_sph_ortRangeSearch.c
+	naive_sph_ortRangeSearch.c naive_item.c
 test_spherical_range_SOURCES = test_spherical_range.c create_pointlist.c \
-	sorted_queues_eq.c 
+	sorted_queues_eq.c naive_item.c
 test_spherical_qnearest_SOURCES = test_spherical_qnearest.c \
-	create_pointlist.c sorted_queues_eq.c
+	create_pointlist.c sorted_queues_eq.c naive_item.c

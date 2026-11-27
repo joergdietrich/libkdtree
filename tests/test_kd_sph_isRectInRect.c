@@ -86,7 +86,9 @@ main()
 	    fprintf(stderr, "Expected truth value: %d\n", truthList[i]);
 	    return 1;
 	}
+	kd_destroyTree(node, NULL);
     }
-
+    free(point->point);
+    free(point);
     return 0;
 }

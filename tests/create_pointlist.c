@@ -28,3 +28,14 @@ create_pointlist(unsigned long npoints, float *min, float *max,
     }
     return pointlist;
 }
+
+
+void
+free_pointlist(struct kd_point *pointlist, unsigned long npoints)
+{
+    unsigned long i;
+
+    for(i = 0; i < npoints; i++)
+	free(pointlist[i].point);
+    free(pointlist);
+}
