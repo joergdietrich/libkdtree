@@ -288,8 +288,9 @@ _destroyData(struct kdNode *node, void (*destr) (void *))
  * construction of the tree. The threads will be unbalanced if this is
  * not a power of 2.
  *
- * \return root node of the tree, NULL if points is empty, a
- * coordinate is NaN, constr fails or memory runs out
+ * \return root node of the tree, NULL if points is empty, min or max
+ * is NULL, dim < 1, a coordinate is NaN, constr fails or memory runs
+ * out
  *
  * The tree occupies two blocks of memory, one for its 2 * nPoints - 1
  * nodes and one for their coordinates.
@@ -304,7 +305,7 @@ kd_buildTree(struct kd_point *points, unsigned long nPoints,
     float *coords;
     size_t nnodes, stride;
 
-    if (!points || nPoints == 0 || dim < 1)
+    if (!points || nPoints == 0 || !min || !max || dim < 1)
         return NULL;
     if (_hasNaN(points, nPoints, dim))
         return NULL;

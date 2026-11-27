@@ -25,6 +25,13 @@ main()
         exit(EXIT_FAILURE);
     }
 
+    /* A tree needs a bounding box */
+    if (kd_buildTree(&point, 1, NULL, NULL, NULL, max, 2, 1) != NULL ||
+        kd_sph_buildTree(&point, 1, NULL, NULL, min, NULL, 1) != NULL) {
+        fprintf(stderr, "Tree built without a bounding box\n");
+        exit(EXIT_FAILURE);
+    }
+
     /* A queue initialized for 0 items still grows */
     if ((q = pqinit(NULL, 0)) == NULL)
         exit(EXIT_FAILURE);
