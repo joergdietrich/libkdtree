@@ -100,8 +100,8 @@
  *   <tt>dist_sq = -1</tt>.
  * - pqremove_min() and pqremove_max() hand out ordered results by
  *   increasing or decreasing distance.
- * - To free a queue, free every ::resItem, then <tt>res->d</tt>, then
- *   \c res.
+ * - pqfree() frees a queue and the items still in it. Items taken out
+ *   with pqremove_min() or pqremove_max() are the caller's to free.
  *
  * The results point into the tree, so they are only valid until the
  * tree is destroyed.

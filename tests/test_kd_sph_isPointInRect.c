@@ -1,7 +1,7 @@
 #include <math.h>
 #include <stdio.h>
 
-#include <kdtree.h>
+#include <kdtree_internal.h>
 
 #ifndef M_PI
 #define M_PI           3.14159265358979323846  /* pi */

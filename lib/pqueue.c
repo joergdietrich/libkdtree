@@ -6,7 +6,22 @@
  * 996.
  */
 
-#include "pqueue.h"
+#include "kdtree_internal.h"
+
+#define PQPRIO(p) (p->dist_sq)
+
+static int floorLog2(uint32_t n);
+static int is_max_level(int i);
+static uint32_t get_max_index(struct pqueue *q);
+static uint32_t pq_get_min_child_index(struct pqueue *q, uint32_t i);
+static uint32_t pq_get_max_child_index(struct pqueue *q, uint32_t i);
+static void pq_swap_nodes(struct pqueue *q, uint32_t i, uint32_t j);
+static void trickle_down(struct pqueue *q, uint32_t i);
+static void trickle_down_min(struct pqueue *q, uint32_t i);
+static void trickle_down_max(struct pqueue *q, uint32_t i);
+static void bubble_up(struct pqueue *q, uint32_t i);
+static void bubble_up_min(struct pqueue *q, uint32_t i);
+static void bubble_up_max(struct pqueue *q, uint32_t i);
 
 
 
@@ -21,7 +36,7 @@
    -1 is returned if n is 0.
    Ripped off wikipedia.
 */
-inline int
+static inline int
 floorLog2(uint32_t n)
 {
     uint32_t pos = 0;
@@ -53,7 +68,7 @@ floorLog2(uint32_t n)
    Returns 1 if i is a max-sorted level, return 0 otherwise
    (min-sorted level). 
 */
-inline int
+static inline int
 is_max_level(int i)
 {
     return floorLog2(i) % 2;
@@ -62,7 +77,7 @@ is_max_level(int i)
 
 
 /* Swap nodes i and j in the priority queue q */
-void
+static void
 pq_swap_nodes(struct pqueue *q, uint32_t i, uint32_t j)
 {
     struct resItem *tmp;
@@ -74,7 +89,7 @@ pq_swap_nodes(struct pqueue *q, uint32_t i, uint32_t j)
 
 
 /* Return the array index of the maximum node */
-uint32_t
+static uint32_t
 get_max_index(struct pqueue *q)
 {
 
@@ -127,7 +142,7 @@ get_max_index(struct pqueue *q)
  */
 
 /* Move a node up the tree */
-void
+static void
 bubble_up_min(struct pqueue *q, uint32_t i)
 {
     /*
@@ -140,7 +155,7 @@ bubble_up_min(struct pqueue *q, uint32_t i)
 }
 
 
-void
+static void
 bubble_up_max(struct pqueue *q, uint32_t i)
 {
     /*
@@ -153,7 +168,7 @@ bubble_up_max(struct pqueue *q, uint32_t i)
 }
 
 
-void
+static void
 bubble_up(struct pqueue *q, uint32_t i)
 {
     if (!is_max_level(i)) {
@@ -182,7 +197,7 @@ bubble_up(struct pqueue *q, uint32_t i)
 
 /* Get index of the smallest child or grandchild of q->d[i].
    Caller must ensure that q->d[i] has at least one child. */
-uint32_t
+static uint32_t
 pq_get_min_child_index(struct pqueue *q, uint32_t i)
 {
     uint32_t m;
@@ -226,7 +241,7 @@ pq_get_min_child_index(struct pqueue *q, uint32_t i)
 
 /* Get index of the largest children and grandchildren of q->d[i].
    Caller must ensure that q->d[i] has at least one child. */
-uint32_t
+static uint32_t
 pq_get_max_child_index(struct pqueue * q, uint32_t i)
 {
     uint32_t m;
@@ -270,7 +285,7 @@ pq_get_max_child_index(struct pqueue * q, uint32_t i)
 
 
 /* Move a node down the tree */
-void
+static void
 trickle_down(struct pqueue *q, uint32_t i)
 {
     if (is_max_level(i))
@@ -280,7 +295,7 @@ trickle_down(struct pqueue *q, uint32_t i)
 }
 
 
-void
+static void
 trickle_down_max(struct pqueue *q, uint32_t i)
 {
     uint32_t m;
@@ -312,7 +327,7 @@ trickle_down_max(struct pqueue *q, uint32_t i)
     }
 }
 
-void
+static void
 trickle_down_min(struct pqueue *q, uint32_t i)
 {
     uint32_t m;
@@ -355,19 +370,11 @@ trickle_down_min(struct pqueue *q, uint32_t i)
  ***********************************************************************
  */
 
-/*!
- * \brief Initialize priority queue
- *
- * \param q a pointer to a priority queue, or NULL if the queue
- * should be initialized.
- *
- * \param n the number of queue items for which memory should be
- * preallocated. If you insert more than n items to the queue,
- * another n items will be allocated automatically. An n of 0 counts
- * as 1.
- *
- * \return Pointer to priority queue, NULL in case of error.
- *
+/*
+ * Initializes the priority queue q, or allocates a new one if q is
+ * NULL. Memory for n items is allocated up front, and the queue grows
+ * by another n items whenever it fills up. An n of 0 counts as 1.
+ * Returns the queue, or NULL on error.
  */
 struct pqueue *
 pqinit(struct pqueue *q, uint32_t n)
@@ -391,17 +398,9 @@ pqinit(struct pqueue *q, uint32_t n)
 }
 
 
-/*!                  
- * \brief Insert an item into the queue.
- *
- * \param q a pointer to a priority queue.
- *
- * \param d the datum to be inserted.
- *
- * \return 1 if the item has been inserted, 0 if the item could not be
- * appended. Either the queue pointer provided was NULL, or the
- * function was unable to allocate the amount of memory needed for the
- * new item.
+/*
+ * Inserts the item d into the queue q. Returns 1 on success, or 0 if
+ * q is NULL or the queue could not grow.
  */
 int
 pqinsert(struct pqueue *q, struct resItem *d)
@@ -534,4 +533,24 @@ pqpeek_max(struct pqueue *q, struct resItem **d)
         return NULL;
     *d = q->d[get_max_index(q)];
     return d;
+}
+
+
+/*!
+ * \brief free a result queue and the items still in it
+ *
+ * \param q a queue returned by a search, or NULL. Items already taken
+ * out with pqremove_min() or pqremove_max() are the caller's to free.
+ */
+void
+pqfree(struct pqueue *q)
+{
+    uint32_t i;
+
+    if (!q)
+        return;
+    for(i = 1; i < q->size; i++)
+        free(q->d[i]);
+    free(q->d);
+    free(q);
 }

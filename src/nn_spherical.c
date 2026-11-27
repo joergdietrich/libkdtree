@@ -65,10 +65,7 @@ main(void)
 
     /* Items sit at res->d[1] to res->d[res->size - 1] */
     printf("%u points within 10 deg\n", res->size - 1);
-    for(i = 1; i < res->size; i++)
-        free(res->d[i]);
-    free(res->d);
-    free(res);
+    pqfree(res);
 
     kd_destroyTree(tree, free);
     return EXIT_SUCCESS;

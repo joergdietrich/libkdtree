@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include <kdtree.h>
+#include <kdtree_internal.h>
 
 int 
 main()

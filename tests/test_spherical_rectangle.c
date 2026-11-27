@@ -2,8 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <kdtree.h>
-#include <pqueue.h>
+#include <kdtree_internal.h>
 
 #include "kdtree_test.h"
 

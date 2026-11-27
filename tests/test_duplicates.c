@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <kdtree.h>
-#include <pqueue.h>
+#include <kdtree_internal.h>
 
 #define NPOINTS 20000
 #define NQUERIES 200
@@ -17,7 +16,6 @@ check(float (*coords)[2], const char *name, int nthreads)
     struct kdNode *tree, *nearest;
     struct pqueue *res;
     int i, k, inrange, failed = 0;
-    uint32_t j;
 
     for(i = 0; i < NPOINTS; i++) {
         points[i].point = coords[i];
@@ -57,10 +55,7 @@ check(float (*coords)[2], const char *name, int nthreads)
                     name, nthreads, res->size - 1, inrange);
             failed = 1;
         }
-        for(j = 1; j < res->size; j++)
-            free(res->d[j]);
-        free(res->d);
-        free(res);
+        pqfree(res);
     }
     kd_destroyTree(tree, NULL);
     return failed;

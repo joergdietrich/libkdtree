@@ -3,8 +3,14 @@
  *
  */
 
-#include "kdtree.h"
-#include "pqueue.h"
+#include "kdtree_internal.h"
+
+static int kd_doOrtRangeSearch(struct kdNode *node, float *min, float *max,
+                               int dim, struct pqueue *res);
+static int kd_doQnearest(struct kdNode *node, float *p, float *max_dist_sq,
+                         unsigned int q, int dim, struct pqueue *res);
+static int kd_doRange(struct kdNode *node, float *p, float *max_dist_sq,
+                      int dim, struct pqueue *res, int ordered);
 
 /* ********************************************************************
 
@@ -42,7 +48,7 @@ kd_min(float x, float y)
 
 /* Returns 1 if node is a point in the hyperrectangle defined by
    minimum and maximum vectors min and max. */
-int
+static int
 kd_isPointInRect(struct kdNode *node, float *min, float *max, int dim)
 {
     int i;
@@ -60,7 +66,7 @@ kd_isPointInRect(struct kdNode *node, float *min, float *max, int dim)
 /* Returns 1 if the hyperrectangle of node is fully contained within
    the HR described by the minimum and maximum vectors min and
    max. Returns 0 otherwise. */
-int
+static int
 kd_isRectInRect(struct kdNode *node, float *min, float *max, int dim)
 {
     int i;
@@ -78,7 +84,7 @@ kd_isRectInRect(struct kdNode *node, float *min, float *max, int dim)
 /* Returns 1 if the hyperrectangle of node overlaps the HR described
    the minimum and maximum vectors min and max. Returns 0
    otherwise. */
-int
+static int
 kd_rectOverlapsRect(struct kdNode *node, float *min, float *max, int dim)
 {
     int i;
@@ -113,16 +119,11 @@ struct pqueue *
 kd_ortRangeSearch(struct kdNode *node, float *min, float *max, int dim)
 {
     struct pqueue *res;
-    uint32_t i;
 
     if ((res = pqinit(NULL, 1)) == NULL)
         return NULL;
     if (!kd_doOrtRangeSearch(node, min, max, dim, res)) {
-        for(i = 0; i < res->size; i++) {
-            free(res->d[i]);
-        }
-        free(res->d);
-        free(res);
+        pqfree(res);
         return NULL;
     }
     return res;
@@ -130,7 +131,7 @@ kd_ortRangeSearch(struct kdNode *node, float *min, float *max, int dim)
 
 /* This is the orthogonal range search. Returns 1 if okay, 0 in case
    of problems. */
-int
+static int
 kd_doOrtRangeSearch(struct kdNode *node, float *min, float *max,
                     int dim, struct pqueue *res)
 {
@@ -251,16 +252,11 @@ kd_qnearest(struct kdNode *node, float *p,
             float *max_dist_sq, unsigned int q, int dim)
 {
     struct pqueue *res;
-    uint32_t i;
 
     if ((res = pqinit(NULL, q + 2)) == NULL)
         return NULL;
     if (!kd_doQnearest(node, p, max_dist_sq, q + 1, dim, res)) {
-        for(i = 0; i < res->size; i++) {
-            free(res->d[i]);
-        }
-        free(res->d);
-        free(res);
+        pqfree(res);
         return NULL;
     }
     return res;
@@ -275,7 +271,7 @@ kd_qnearest(struct kdNode *node, float *p,
  *
  * return 1 if okay, zero in case of problems
  */
-int
+static int
 kd_doQnearest(struct kdNode *node, float *p,
               float *max_dist_sq, unsigned int q, int dim, struct pqueue *res)
 {
@@ -392,16 +388,11 @@ kd_range(struct kdNode *node, float *p, float *max_dist_sq,
          int dim, int ordered)
 {
     struct pqueue *res;
-    uint32_t i;
 
     if ((res = pqinit(NULL, 1)) == NULL)
         return NULL;
     if (!kd_doRange(node, p, max_dist_sq, dim, res, ordered)) {
-        for(i = 0; i < res->size; i++) {
-            free(res->d[i]);
-        }
-        free(res->d);
-        free(res);
+        pqfree(res);
         return NULL;
     }
     return res;
@@ -409,7 +400,7 @@ kd_range(struct kdNode *node, float *p, float *max_dist_sq,
 
 
 /* This is the range search. Returns 1 if okay, 0 in case of problems */
-int
+static int
 kd_doRange(struct kdNode *node, float *p, float *max_dist_sq,
            int dim, struct pqueue *res, int ordered)
 {
