@@ -13,6 +13,7 @@ EXTRA_DIST = test_cartesian_nn.sh \
 
 TESTS = test_kd_sqr \
 	test_duplicates \
+	test_build_errors \
 	test_edge_cases \
 	test_kd_sph_dist \
 	test_kd_sph_isPointInRect \
@@ -28,6 +29,7 @@ TESTS = test_kd_sqr \
 
 check_PROGRAMS = test_kd_sqr \
 	test_duplicates \
+	test_build_errors \
 	test_edge_cases \
 	test_kd_sph_dist \
 	test_kd_sph_isPointInRect \
@@ -43,6 +45,7 @@ check_PROGRAMS = test_kd_sqr \
 
 test_kd_sqr_SOURCES =  test_kd_sqr.c
 test_duplicates_SOURCES = test_duplicates.c
+test_build_errors_SOURCES = test_build_errors.c
 test_edge_cases_SOURCES = test_edge_cases.c
 test_kd_sph_dist_SOURCES = test_kd_sph_dist.c
 test_kd_sph_isPointInRect_SOURCES = test_kd_sph_isPointInRect.c

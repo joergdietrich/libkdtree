@@ -16,7 +16,7 @@ check(float (*coords)[2], const char *name, int nthreads)
     float min[2] = { 0, 0 }, max[2] = { 1, 1 };
     struct kdNode *tree, *nearest;
     struct pqueue *res;
-    int i, k, inrange;
+    int i, k, inrange, failed = 0;
     uint32_t j;
 
     for(i = 0; i < NPOINTS; i++) {
@@ -28,7 +28,7 @@ check(float (*coords)[2], const char *name, int nthreads)
         fprintf(stderr, "%s: building the tree failed\n", name);
         return 1;
     }
-    for(k = 0; k < NQUERIES; k++) {
+    for(k = 0; k < NQUERIES && !failed; k++) {
         float q[2] = { drand48(), drand48() };
         float best = 4, dist_sq = 4, radius_sq = 0.01;
 
@@ -42,17 +42,20 @@ check(float (*coords)[2], const char *name, int nthreads)
                 inrange++;
         }
         nearest = kd_nearest(tree, q, &dist_sq, 2);
-        if (kd_dist_sq(nearest->location, q, 2) != best) {
+        if (!nearest || kd_dist_sq(nearest->location, q, 2) != best) {
             fprintf(stderr, "%s, %d threads: wrong nearest neighbor\n",
                     name, nthreads);
-            return 1;
+            failed = 1;
+            break;
         }
-        if ((res = kd_range(tree, q, &radius_sq, 2, KD_UNORDERED)) == NULL)
-            return 1;
+        if ((res = kd_range(tree, q, &radius_sq, 2, KD_UNORDERED)) == NULL) {
+            failed = 1;
+            break;
+        }
         if ((int) res->size - 1 != inrange) {
             fprintf(stderr, "%s, %d threads: range search found %u of %d\n",
                     name, nthreads, res->size - 1, inrange);
-            return 1;
+            failed = 1;
         }
         for(j = 1; j < res->size; j++)
             free(res->d[j]);
@@ -60,7 +63,7 @@ check(float (*coords)[2], const char *name, int nthreads)
         free(res);
     }
     kd_destroyTree(tree, NULL);
-    return 0;
+    return failed;
 }
 
 int

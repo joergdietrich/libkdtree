@@ -24,12 +24,8 @@ lib/kdtree_common.o
 lib/kdtree_spherical.lo
 lib/kdtree_spherical.o
 lib/libkdtree.la
-lib/pmergesort.lo
-lib/pmergesort.o
 lib/pqueue.lo
 lib/pqueue.o
-lib/qsort.lo
-lib/qsort.o
 libtool
 ltmain.sh
 missing

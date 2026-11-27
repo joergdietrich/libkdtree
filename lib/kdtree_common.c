@@ -109,19 +109,65 @@ _median3(struct kd_point *points, unsigned long i, unsigned long j,
     return a < c ? a : (b < c ? c : b);
 }
 
+/* Restores the max-heap order along axis below root, in a heap of n
+   points */
+static void
+_siftDown(struct kd_point *points, unsigned long root, unsigned long n,
+          int axis)
+{
+    unsigned long child;
+
+    while ((child = 2 * root + 1) < n) {
+        if (child + 1 < n &&
+            points[child].point[axis] < points[child + 1].point[axis])
+            child++;
+        if (!(points[root].point[axis] < points[child].point[axis]))
+            return;
+        _swapPoints(points, root, child);
+        root = child;
+    }
+}
+
+/* Sorts n points along axis in O(n log n) time for any input order */
+static void
+_heapSort(struct kd_point *points, unsigned long n, int axis)
+{
+    unsigned long i;
+
+    for(i = n / 2; i-- > 0;)
+        _siftDown(points, i, n, axis);
+    for(i = n - 1; i > 0; i--) {
+        _swapPoints(points, 0, i);
+        _siftDown(points, 0, i, axis);
+    }
+}
+
 /* Reorders the n points so that points[k] holds the point a full sort
    along axis would put there, with no greater coordinate before it and
    no smaller one after it. This is quickselect with a three-way
-   partition, which keeps runs of equal coordinates linear. */
+   partition, which keeps runs of equal coordinates linear. Like
+   introselect, it sorts the remaining range once it has used 2 log2(n)
+   partitions, so inputs that defeat the median-of-3 pivot cost
+   O(n log n) instead of O(n^2). */
 static void
 _selectPoint(struct kd_point *points, unsigned long n, unsigned long k,
              int axis)
 {
-    unsigned long lo = 0, hi = n - 1;
+    unsigned long lo = 0, hi = n - 1, m;
+    int rounds = 0;
+
+    for(m = n; m > 1; m >>= 1)
+        rounds += 2;
 
     while (lo < hi) {
-        float pivot = _median3(points, lo, lo + (hi - lo) / 2, hi, axis);
         unsigned long lt = lo, i = lo, gt = hi;
+        float pivot;
+
+        if (rounds-- == 0) {
+            _heapSort(points + lo, hi - lo + 1, axis);
+            return;
+        }
+        pivot = _median3(points, lo, lo + (hi - lo) / 2, hi, axis);
 
         /*
          * Partition [lo, hi] into coordinates below the pivot at
@@ -145,6 +191,20 @@ _selectPoint(struct kd_point *points, unsigned long n, unsigned long k,
         else
             return;
     }
+}
+
+/* Returns 1 if any of the n points has a NaN coordinate */
+static int
+_hasNaN(struct kd_point *points, unsigned long n, int dim)
+{
+    unsigned long i;
+    int j;
+
+    for(i = 0; i < n; i++)
+        for(j = 0; j < dim; j++)
+            if (isnan(points[i].point[j]))
+                return 1;
+    return 0;
 }
 
 /* Points the node at its slot of 3 * dim floats, which holds its
@@ -177,7 +237,8 @@ _destroyData(struct kdNode *node, void (*destr) (void *))
  * \param nPoints the length of the points array.
  *
  * \param constr a pointer to a void *constructor() function to include
- * the data container in the tree; optional, can be NULL
+ * the data container in the tree; optional, can be NULL. If it
+ * returns NULL for non-NULL data, the build fails.
  *
  * \param destr a pointer to a void destructor() function to free()
  * the data containers in the tree; optional, can be NULL, but should
@@ -195,8 +256,8 @@ _destroyData(struct kdNode *node, void (*destr) (void *))
  * construction of the tree. The threads will be unbalanced if this is
  * not a power of 2.
  *
- * \return root node of the tree, NULL if points is empty or memory
- * runs out
+ * \return root node of the tree, NULL if points is empty, a
+ * coordinate is NaN, constr fails or memory runs out
  *
  * The tree occupies two blocks of memory, one for its 2 * nPoints - 1
  * nodes and one for their coordinates.
@@ -212,6 +273,8 @@ kd_buildTree(struct kd_point *points, unsigned long nPoints,
     size_t nnodes, stride;
 
     if (!points || nPoints == 0 || dim < 1)
+        return NULL;
+    if (_hasNaN(points, nPoints, dim))
         return NULL;
     stride = 3 * (size_t) dim;
     if (nPoints > SIZE_MAX / (2 * stride * sizeof(float)))
@@ -267,8 +330,11 @@ kd_doBuildTree(void *threadarg)
     node->split = axis;
     if (a->nPoints == 1) {
         memcpy(node->location, a->points[0].point, box);
-        if (a->constr)
+        if (a->constr) {
             node->data = a->constr(a->points[0].data);
+            if (!node->data && a->points[0].data)
+                return NULL;
+        }
         return node;
     }
 
