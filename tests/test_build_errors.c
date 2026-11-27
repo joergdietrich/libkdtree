@@ -61,6 +61,14 @@ main()
     }
     coords[NPOINTS / 2][1] = 0.5;
 
+    /* So does a NaN corner of the bounding box */
+    max[1] = NAN;
+    if (kd_buildTree(points, NPOINTS, NULL, NULL, min, max, 2, 1) != NULL) {
+        fprintf(stderr, "Tree built with a NaN box corner\n");
+        exit(EXIT_FAILURE);
+    }
+    max[1] = 1;
+
     for(nthreads = 1; nthreads <= 4; nthreads *= 4) {
         /* A failing constr makes the build fail, and the copies made
            before it are freed */

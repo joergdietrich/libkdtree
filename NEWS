@@ -1,0 +1,51 @@
+libkdtree 0.5.0
+===============
+
+Incompatible changes
+--------------------
+
+- The library version is 1:0:0, so shared builds have the soname
+  libkdtree.so.1. Programs built against 0.4.3 must be rebuilt.
+- kdtree.h declares only the public API. Internal functions such as
+  kd_doBuildTree, kd_allocNode and the heap helpers are no longer
+  declared there, and most are no longer exported. kd_freeNode and
+  pqueue.h are gone.
+- kdtree.h no longer includes pthread.h and string.h. Programs that
+  relied on it must include them themselves.
+- kd_destroyTree must be given the root of a tree. A tree is two
+  blocks of memory, so a subtree can no longer be freed on its own.
+- kd_buildTree and kd_sph_buildTree return NULL for a NaN coordinate,
+  a NaN corner of the bounding box, a NULL min or max, or a constr
+  that returns NULL for non-NULL data. A failing constr used to leave
+  NULL data in the tree.
+
+New
+---
+
+- pqfree() frees a result queue and the items still in it.
+
+Fixes
+-----
+
+- Spherical distances no longer turn into NaN for identical or
+  antipodal points, so searches no longer drop exact matches.
+- Spherical searches near RA = 0 find all points (GitHub issue #1).
+- Building with several threads no longer races in the sort.
+- An empty point list returns NULL instead of crashing.
+- Failed allocations during building and searching, and failed
+  thread creation during building, are handled instead of ignored.
+- pqinit(q, 0) no longer overflows on the first insert.
+- A failed search no longer frees an uninitialized pointer.
+
+Performance
+-----------
+
+- Trees are built with quickselect instead of sorting every level.
+  A million random 2-d points build about six times faster.
+- A tree takes two allocations instead of about three per node.
+
+Documentation
+-------------
+
+- The reference documentation is expanded, with nearest-neighbor
+  examples, and published at https://joergdietrich.github.io/libkdtree/

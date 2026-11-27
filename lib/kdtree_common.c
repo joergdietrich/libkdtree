@@ -239,6 +239,18 @@ _hasNaN(struct kd_point *points, unsigned long n, int dim)
     return 0;
 }
 
+/* Returns 1 if a corner of the box from min to max has a NaN coordinate */
+static int
+_boxHasNaN(float *min, float *max, int dim)
+{
+    int j;
+
+    for(j = 0; j < dim; j++)
+        if (isnan(min[j]) || isnan(max[j]))
+            return 1;
+    return 0;
+}
+
 /* Points the node at its slot of 3 * dim floats, which holds its
    location, then its min corner, then its max corner. */
 static void
@@ -289,8 +301,8 @@ _destroyData(struct kdNode *node, void (*destr) (void *))
  * not a power of 2.
  *
  * \return root node of the tree, NULL if points is empty, min or max
- * is NULL, dim < 1, a coordinate is NaN, constr fails or memory runs
- * out
+ * is NULL, dim < 1, a point or box coordinate is NaN, constr fails or
+ * memory runs out
  *
  * The tree occupies two blocks of memory, one for its 2 * nPoints - 1
  * nodes and one for their coordinates.
@@ -307,7 +319,7 @@ kd_buildTree(struct kd_point *points, unsigned long nPoints,
 
     if (!points || nPoints == 0 || !min || !max || dim < 1)
         return NULL;
-    if (_hasNaN(points, nPoints, dim)) {
+    if (_hasNaN(points, nPoints, dim) || _boxHasNaN(min, max, dim)) {
         fprintf(stderr, "kd_buildTree: NaN coordinate\n");
         return NULL;
     }

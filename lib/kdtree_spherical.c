@@ -118,7 +118,7 @@ kd_sph_orth_dist(float *p1, float *p2, int split)
 /*! \brief build kd-tree structure
  *
  * \param points an array of kd_points (struct with position vector
- * and data container).
+ * and data container). The array is reordered.
  *
  * \param nPoints the length of the points array.
  *

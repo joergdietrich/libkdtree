@@ -47,6 +47,8 @@ check(float (*coords)[2], const char *name, int nthreads)
             break;
         }
         if ((res = kd_range(tree, q, &radius_sq, 2, KD_UNORDERED)) == NULL) {
+            fprintf(stderr, "%s, %d threads: range search failed\n",
+                    name, nthreads);
             failed = 1;
             break;
         }
