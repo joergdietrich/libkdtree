@@ -50,7 +50,7 @@
  *
  * kd_buildTree() builds a Cartesian tree of any dimension, and
  * kd_sph_buildTree() builds a tree on the sphere. Both take an array
- * of ::kd_point structures, which they sort in place. The tree copies
+ * of ::kd_point structures, which they reorder in place. The tree copies
  * the coordinates, so the array can be freed afterwards.
  *
  * - \c min and \c max are the corners of a box that holds all points.
