@@ -371,18 +371,10 @@ trickle_down_min(struct pqueue *q, uint32_t i)
  */
 
 /*
- * \brief Initialize priority queue
- *
- * \param q a pointer to a priority queue, or NULL if the queue
- * should be initialized.
- *
- * \param n the number of queue items for which memory should be
- * preallocated. If you insert more than n items to the queue,
- * another n items will be allocated automatically. An n of 0 counts
- * as 1.
- *
- * \return Pointer to priority queue, NULL in case of error.
- *
+ * Initializes the priority queue q, or allocates a new one if q is
+ * NULL. Memory for n items is allocated up front, and the queue grows
+ * by another n items whenever it fills up. An n of 0 counts as 1.
+ * Returns the queue, or NULL on error.
  */
 struct pqueue *
 pqinit(struct pqueue *q, uint32_t n)
@@ -406,17 +398,9 @@ pqinit(struct pqueue *q, uint32_t n)
 }
 
 
-/*                  
- * \brief Insert an item into the queue.
- *
- * \param q a pointer to a priority queue.
- *
- * \param d the datum to be inserted.
- *
- * \return 1 if the item has been inserted, 0 if the item could not be
- * appended. Either the queue pointer provided was NULL, or the
- * function was unable to allocate the amount of memory needed for the
- * new item.
+/*
+ * Inserts the item d into the queue q. Returns 1 on success, or 0 if
+ * q is NULL or the queue could not grow.
  */
 int
 pqinsert(struct pqueue *q, struct resItem *d)

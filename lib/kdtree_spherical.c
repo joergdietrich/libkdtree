@@ -57,15 +57,7 @@ kd_sph_bearing(float *p1, float *p2)
 }
 
 
-/* \brief Compute cross-track distance
- * \param p1 a point
- *
- * \param p2 a second point defining a great circle from p1
- *
- * \param p3 a third point whose distance from the great circle we compute
- *
- * \return distance of p3 from the great circle connecting p1 and p2. 
- */
+/* Cross-track distance of p3 from the great circle through p1 and p2 */
 static float
 kd_sph_xtd(float *p1, float *p2, float *p3)
 {
