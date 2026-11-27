@@ -68,12 +68,11 @@ typedef struct pqueue {
  */
 typedef struct kd_thread_data {
     int max_threads;
-    struct kd_point *points;
-    unsigned long nPoints;
+    struct kd_point *points;    /*!<points of the subtree */
+    unsigned long nPoints;      /*!<number of points */
     void *(*constr) (void *);
-    void (*destr) (void *);
-    float *min;
-    float *max;
+    struct kdNode *nodes;       /*!<the subtree's 2 * nPoints - 1 nodes */
+    float *coords;              /*!<their coordinates, 3 * dim per node */
     int depth;
     int dim;
 } kd_thread_data;
@@ -114,12 +113,6 @@ void kd_freeNode(kdNode * node, void (*destr) (void *));
 struct kdNode *kd_allocNode(struct kd_point *points, unsigned long pivot,
                             float *min, float *max, int dim, int axis);
 void kd_destroyTree(struct kdNode *node, void (*destr) (void *));
-struct kd_thread_data *kd_buildArg(struct kd_point *points,
-                                   unsigned long nPoints,
-                                   void *(*constr) (void *),
-                                   void (*destr) (void *), float *min,
-                                   float *max, int depth, int max_threads,
-                                   int dim);
 struct kdNode *kd_buildTree(struct kd_point *points, unsigned long nPoints,
                             void *(*constr) (void *), void (*destr) (void *),
                             float *min, float *max, int dim, int max_threads);
