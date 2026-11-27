@@ -29,9 +29,12 @@ naive_ortRangeSearch(struct kd_point *pointlist, unsigned int npoints,
     }
     for(i=0; i<npoints; i++) {
 	if (is_pointInRect(pointlist[i], rect_min, rect_max, dim)) {
-	    if ((point = naive_item(pointlist[i].point, -1)) == NULL)
-		return NULL;
-            pqinsert(res, point);
+	    if ((point = naive_item(pointlist[i].point, -1)) == NULL ||
+	        !pqinsert(res, point)) {
+	        free(point);
+	        pqfree(res);
+	        return NULL;
+	    }
 	}
     }
     return res;

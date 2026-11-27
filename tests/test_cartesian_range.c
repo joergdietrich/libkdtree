@@ -23,9 +23,12 @@ naive_range(struct kd_point *pointlist, unsigned int npoints,
     }
     for(i=0; i<npoints; i++) {
 	if ((dsq = kd_dist_sq(pointlist[i].point, p, dim)) < *range) {
-	    if ((point = naive_item(pointlist[i].point, dsq)) == NULL)
-		return NULL;
-	    pqinsert(res, point);
+	    if ((point = naive_item(pointlist[i].point, dsq)) == NULL ||
+	        !pqinsert(res, point)) {
+	        free(point);
+	        pqfree(res);
+	        return NULL;
+	    }
 	}
     }
     return res;
