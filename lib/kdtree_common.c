@@ -103,144 +103,117 @@ _compPoints(const void *p1, const void *p2, int axis)
         return -1;
 }
 
+/* Arguments for building one child of a node that splits along axis
+   at split: n points starting at points, inside the parent's box with
+   its upper (left child) or lower (right child) side moved to split. */
+static struct kd_thread_data *
+_childArg(const struct kd_thread_data *parent, struct kd_point *points,
+          unsigned long n, int axis, float split, int is_right)
+{
+    struct kd_thread_data *arg;
+    size_t box = parent->dim * sizeof(float);
+    float *min = kd_malloc(box, "kd_buildTree (min): ");
+    float *max = kd_malloc(box, "kd_buildTree (max): ");
+
+    if (!min || !max) {
+        free(min);
+        free(max);
+        return NULL;
+    }
+    memcpy(min, parent->min, box);
+    memcpy(max, parent->max, box);
+    if (is_right)
+        min[axis] = split;
+    else
+        max[axis] = split;
+
+    arg = kd_buildArg(points, n, parent->constr, parent->destr, min, max,
+                      parent->depth + 1, parent->max_threads / 2,
+                      parent->dim);
+    if (!arg) {
+        free(min);
+        free(max);
+    }
+    return arg;
+}
+
+static void
+_freeChildArg(struct kd_thread_data *arg)
+{
+    if (!arg)
+        return;
+    free(arg->min);
+    free(arg->max);
+    free(arg);
+}
+
 void *
 kd_doBuildTree(void *threadarg)
 {
-
-    int sortaxis;
-    unsigned long pivot;
-    float *tmpMinLeft, *tmpMaxLeft, *tmpMinRight, *tmpMaxRight;
-    struct kdNode *node;
-    struct kd_point *points;
-    unsigned long nPoints;
-    void *(*constr) (void *);
-    void (*destr) (void *);
-    float *min, *max;
-    int depth, dim, max_threads;
+    struct kd_thread_data *a = threadarg;
+    struct kd_thread_data *arg[2];
+    struct kdNode *node, *child[2];
     pthread_t threads[2];
-    pthread_attr_t attr;
-    struct kd_thread_data *argleft, *argright;
-    struct kd_thread_data *my_data = (struct kd_thread_data *) threadarg;
+    int threaded[2];
+    unsigned long pivot;
+    int axis, i;
+    void *ret;
 
-    points = my_data->points;
-    nPoints = my_data->nPoints;
-    constr = my_data->constr;
-    destr = my_data->destr;
-    min = my_data->min;
-    max = my_data->max;
-    depth = my_data->depth;
-    max_threads = my_data->max_threads;
-    dim = my_data->dim;
-
-    pthread_attr_init(&attr);
-    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
-
-    sortaxis = depth % dim;
-    if (nPoints == 1) {
-        if ((node = kd_allocNode(points, 0, min, max, sortaxis, dim)) == NULL)
+    axis = a->depth % a->dim;
+    if (a->nPoints == 1) {
+        if ((node = kd_allocNode(a->points, 0, a->min, a->max, axis,
+                                 a->dim)) == NULL)
             return NULL;
-        if (constr)
-            node->data = constr(points[0].data);
+        if (a->constr)
+            node->data = a->constr(a->points[0].data);
         return node;
     }
 
     /*
-     * If this iteration is allowed to start more threads, we first
-     * use them to parallelize the sorting 
+     * Sort along the split axis, with up to max_threads threads
      */
-    pmergesort(points, nPoints, sizeof(struct kd_point), _compPoints,
-               sortaxis, max_threads);
-    pivot = nPoints / 2;
-    if ((node = kd_allocNode(points, pivot, min, max, sortaxis, dim)) == NULL)
+    if (!pmergesort(a->points, a->nPoints, sizeof(struct kd_point),
+                    _compPoints, axis, a->max_threads))
+        return NULL;
+    pivot = a->nPoints / 2;
+    if ((node = kd_allocNode(a->points, pivot, a->min, a->max, axis,
+                             a->dim)) == NULL)
         return NULL;
 
-    if ((tmpMinLeft = kd_malloc(sizeof(float) * dim,
-                                "kd_buildTree (tmpMin): ")) == NULL) {
-        kd_destroyTree(node, destr);
-        return NULL;
-    }
-    memcpy(tmpMinLeft, min, dim * sizeof(float));
-    if ((tmpMaxLeft = kd_malloc(sizeof(float) * dim,
-                                "kd_buildTree (tmpMax): ")) == NULL) {
-        kd_destroyTree(node, destr);
-        free(tmpMinLeft);
-        return NULL;
-    }
-    memcpy(tmpMaxLeft, max, dim * sizeof(float));
-    tmpMaxLeft[sortaxis] = node->location[sortaxis];
-    argleft =
-        kd_buildArg(points, pivot, constr, destr, tmpMinLeft, tmpMaxLeft,
-                    depth + 1, max_threads / 2, dim);
-    if (!argleft) {
-        kd_destroyTree(node, destr);
-        free(tmpMinLeft);
-        free(tmpMaxLeft);
-        return NULL;
-    }
-    if (max_threads > 1) {
-        pthread_create(&threads[0], &attr, kd_doBuildTree, (void *) argleft);
-    } else {
-        node->left = kd_doBuildTree((void *) argleft);
-        free(argleft);
-        free(tmpMinLeft);
-        free(tmpMaxLeft);
-        if (!node->left) {
-            kd_destroyTree(node, destr);
-            return NULL;
-        }
-    }
-
-    if ((tmpMinRight = kd_malloc(sizeof(float) * dim,
-                                 "kd_buildTree (tmpMin): ")) == NULL) {
-        kd_destroyTree(node, destr);
-        return NULL;
-    }
-    memcpy(tmpMinRight, min, dim * sizeof(float));
-    if ((tmpMaxRight = kd_malloc(sizeof(float) * dim,
-                                 "kd_buildTree (tmpMax): ")) == NULL) {
-        kd_destroyTree(node, destr);
-        free(tmpMinRight);
+    arg[0] = _childArg(a, a->points, pivot, axis, node->location[axis], 0);
+    arg[1] = _childArg(a, a->points + pivot, a->nPoints - pivot, axis,
+                       node->location[axis], 1);
+    if (!arg[0] || !arg[1]) {
+        _freeChildArg(arg[0]);
+        _freeChildArg(arg[1]);
+        kd_freeNode(node, NULL);
         return NULL;
     }
 
-    memcpy(tmpMaxRight, max, dim * sizeof(float));
-    tmpMinRight[sortaxis] = node->location[sortaxis];
-    argright = kd_buildArg(&points[pivot], nPoints - pivot, constr, destr,
-                           tmpMinRight, tmpMaxRight, depth + 1,
-                           max_threads / 2, dim);
-    if (!argright) {
-        kd_destroyTree(node, destr);
-        free(tmpMinRight);
-        free(tmpMaxRight);
+    /*
+     * Build each child in a new thread if allowed. A child whose
+     * thread cannot be started is built in this thread.
+     */
+    for(i = 0; i < 2; i++)
+        threaded[i] = a->max_threads > 1 &&
+            !pthread_create(&threads[i], NULL, kd_doBuildTree, arg[i]);
+    for(i = 0; i < 2; i++) {
+        if (threaded[i]) {
+            pthread_join(threads[i], &ret);
+            child[i] = ret;
+        } else {
+            child[i] = kd_doBuildTree(arg[i]);
+        }
+        _freeChildArg(arg[i]);
+    }
+
+    node->left = child[0];
+    node->right = child[1];
+    if (!node->left || !node->right) {
+        kd_destroyTree(node, a->destr);
         return NULL;
     }
-    if (max_threads > 1) {
-        pthread_create(&threads[1], &attr, kd_doBuildTree, (void *) argright);
-    } else {
-        node->right = kd_doBuildTree((void *) argright);
-        free(argright);
-        free(tmpMinRight);
-        free(tmpMaxRight);
-        if (!node->right) {
-            kd_destroyTree(node, destr);
-            return NULL;
-        }
-    }
-    if (max_threads > 1) {
-        pthread_join(threads[0], (void *) (&node->left));
-        free(argleft);
-        free(tmpMinLeft);
-        free(tmpMaxLeft);
-        pthread_join(threads[1], (void *) (&node->right));
-        free(argright);
-        free(tmpMinRight);
-        free(tmpMaxRight);
-        if (!node->left || !node->right) {
-            kd_destroyTree(node, destr);
-            return NULL;
-        }
-    }
-    return (void *) node;
+    return node;
 }
 
 
@@ -296,6 +269,9 @@ kd_allocNode(struct kd_point *points, unsigned long pivot,
 
     if ((node = kd_malloc(sizeof(kdNode), "kd_allocNode (node): ")) == NULL)
         return NULL;
+    node->location = node->min = node->max = NULL;
+    node->left = node->right = NULL;
+    node->data = NULL;
     node->split = axis;
     if ((node->location = kd_malloc(sizeof(float) * dim,
                                     "kd_allocNode (node->location): ")) ==
@@ -316,8 +292,6 @@ kd_allocNode(struct kd_point *points, unsigned long pivot,
         return NULL;
     }
     memcpy(node->max, max, dim * sizeof(float));
-    node->left = node->right = NULL;
-    node->data = NULL;
     return node;
 }
 
@@ -363,7 +337,10 @@ kd_insertResTree(struct kdNode *node, struct pqueue *res)
 
         point->node = node;
         point->dist_sq = -1;
-        pqinsert(res, point);
+        if (!pqinsert(res, point)) {
+            free(point);
+            return 0;
+        }
     }
     if (!kd_insertResTree(node->right, res))
         return 0;

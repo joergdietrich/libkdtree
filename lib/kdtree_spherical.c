@@ -118,21 +118,16 @@ kd_sph_orth_dist(float *p1, float *p2, int split)
  * construction of the tree. The threads will be unbalanced if this is
  * not a power of 2.
  *
- * \return root node of the tree
+ * \return root node of the tree, NULL if points is empty or memory
+ * runs out
  */
 struct kdNode *
 kd_sph_buildTree(struct kd_point *points, unsigned long nPoints,
                  void *(*constr) (void *), void (*destr) (void *),
                  float *min, float *max, int max_threads)
 {
-    struct kd_thread_data *my_data;
-    struct kdNode *tree;
-
-    my_data = kd_buildArg(points, nPoints, constr, destr, min, max, 0,
-                          max_threads, 2);
-    tree = kd_doBuildTree(my_data);
-    free(my_data);
-    return tree;
+    return kd_buildTree(points, nPoints, constr, destr, min, max, 2,
+                        max_threads);
 }
 
 
@@ -459,7 +454,10 @@ kd_sph_doQnearest(struct kdNode *node, float *p, float *max_dist_sq,
             return 0;
         point->node = node;
         point->dist_sq = dist_sq;
-        pqinsert(res, point);
+        if (!pqinsert(res, point)) {
+            free(point);
+            return 0;
+        }
     }
     if (res->size > q) {
         pqremove_max(res, &item);
@@ -527,7 +525,10 @@ kd_sph_doQnearest(struct kdNode *node, float *p, float *max_dist_sq,
                 return 0;
             point->node = node;
             point->dist_sq = dist_sq;
-            pqinsert(res, point);
+            if (!pqinsert(res, point)) {
+                free(point);
+                return 0;
+            }
         }
         if (res->size > q) {
             pqremove_max(res, &item);
@@ -606,7 +607,10 @@ kd_sph_doRange(struct kdNode *node, float *p, float *max_dist_sq,
             return 0;
         point->node = node;
         point->dist_sq = ordered ? dist_sq : -1;
-        pqinsert(res, point);
+        if (!pqinsert(res, point)) {
+            free(point);
+            return 0;
+        }
     }
 
     if (p[node->split] < node->location[node->split]) {
@@ -658,7 +662,10 @@ kd_sph_doRange(struct kdNode *node, float *p, float *max_dist_sq,
                 return 0;
             point->node = node;
             point->dist_sq = ordered ? dist_sq : -1;
-            pqinsert(res, point);
+            if (!pqinsert(res, point)) {
+                free(point);
+                return 0;
+            }
         }
 
     }

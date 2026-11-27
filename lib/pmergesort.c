@@ -38,6 +38,8 @@ pmergesort(void *base, size_t nmemb, size_t size,
     void *tmp;
     param_t args;
 
+    if (nmemb < 2)
+        return 1;
     if ((tmp = calloc(nmemb, size)) == NULL) {
         perror("malloc");
         return 0;
@@ -81,6 +83,7 @@ mergesort_t(void *args)
     size_t i, li, ri;
     struct param_t larg, rarg;
     pthread_t thr[2];
+    int threaded[2];
     param_t *mya = (param_t *) args;
 
     if (mya->max_threads < 2) {
@@ -92,30 +95,25 @@ mergesort_t(void *args)
                mya->cmp, mya->axis);
     } else {
         /*
-         * Start two new threads, each sorting half of array a 
+         * Sort each half of array a in a new thread. A half whose
+         * thread cannot be started is sorted in this thread.
          */
         pm_buildparams(&larg, mya->a, mya->b, mya->first, mya->nmemb / 2,
                        mya->size, mya->cmp, mya->axis, mya->max_threads / 2);
-        /*
-         * Recursively sort the left half 
-         */
-        if (pthread_create(&thr[0], NULL, mergesort_t, (void *) &larg)) {
-            perror("pthread_create");
-            return NULL;
-        }
-
         pm_buildparams(&rarg, mya->a, mya->b, mya->first + mya->nmemb / 2,
                        mya->nmemb - mya->nmemb / 2, mya->size,
                        mya->cmp, mya->axis, mya->max_threads / 2);
-        /*
-         * Recursively sort the right half 
-         */
-        if (pthread_create(&thr[1], NULL, mergesort_t, (void *) &rarg)) {
-            perror("pthread_create");
-            return NULL;
-        }
-        pthread_join(thr[0], NULL);
-        pthread_join(thr[1], NULL);
+
+        threaded[0] = !pthread_create(&thr[0], NULL, mergesort_t, &larg);
+        threaded[1] = !pthread_create(&thr[1], NULL, mergesort_t, &rarg);
+        if (threaded[0])
+            pthread_join(thr[0], NULL);
+        else
+            mergesort_t(&larg);
+        if (threaded[1])
+            pthread_join(thr[1], NULL);
+        else
+            mergesort_t(&rarg);
 
         /*
          * Merge the two sorted chunks of array a into array b 

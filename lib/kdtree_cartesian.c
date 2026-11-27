@@ -66,7 +66,8 @@ kd_min(float x, float y)
  * construction of the tree. The threads will be unbalanced if this is
  * not a power of 2.
  *
- * \return root node of the tree
+ * \return root node of the tree, NULL if points is empty or memory
+ * runs out
  */
 struct kdNode *
 kd_buildTree(struct kd_point *points, unsigned long nPoints,
@@ -76,8 +77,11 @@ kd_buildTree(struct kd_point *points, unsigned long nPoints,
     struct kd_thread_data *my_data;
     struct kdNode *tree;
 
-    my_data = kd_buildArg(points, nPoints, constr, destr, min, max, 0,
-                          max_threads, dim);
+    if (!points || nPoints == 0)
+        return NULL;
+    if ((my_data = kd_buildArg(points, nPoints, constr, destr, min, max, 0,
+                               max_threads, dim)) == NULL)
+        return NULL;
     tree = kd_doBuildTree(my_data);
     free(my_data);
     return tree;
@@ -344,7 +348,10 @@ kd_doQnearest(struct kdNode *node, float *p,
             return 0;
         point->node = node;
         point->dist_sq = dist_sq;
-        pqinsert(res, point);
+        if (!pqinsert(res, point)) {
+            free(point);
+            return 0;
+        }
     }
     if (res->size > q) {
         pqremove_max(res, &item);
@@ -393,7 +400,10 @@ kd_doQnearest(struct kdNode *node, float *p,
                 return 0;
             point->node = node;
             point->dist_sq = dist_sq;
-            pqinsert(res, point);
+            if (!pqinsert(res, point)) {
+                free(point);
+                return 0;
+            }
         }
         if (res->size > q) {
             pqremove_max(res, &item);
@@ -473,7 +483,10 @@ kd_doRange(struct kdNode *node, float *p, float *max_dist_sq,
             return 0;
         point->node = node;
         point->dist_sq = ordered ? dist_sq : -1;
-        pqinsert(res, point);
+        if (!pqinsert(res, point)) {
+            free(point);
+            return 0;
+        }
     }
 
     if (p[node->split] < node->location[node->split]) {
@@ -506,7 +519,10 @@ kd_doRange(struct kdNode *node, float *p, float *max_dist_sq,
                 return 0;
             point->node = node;
             point->dist_sq = ordered ? dist_sq : -1;
-            pqinsert(res, point);
+            if (!pqinsert(res, point)) {
+                free(point);
+                return 0;
+            }
         }
 
     }
