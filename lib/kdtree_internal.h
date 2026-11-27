@@ -24,8 +24,9 @@ int kd_sph_isPointInRect(struct kdNode *node, float *min, float *max);
 int kd_sph_isRectInRect(struct kdNode *node, float *min, float *max);
 
 /* Result queues */
-struct pqueue *pqinit(struct pqueue *q, uint32_t n);
-int pqinsert(struct pqueue *q, struct resItem *d);
+struct pqueue *kd_pqinit(struct pqueue *q, uint32_t n);
+int kd_pqinsert(struct pqueue *q, struct resItem *d);
 int kd_insertResTree(struct kdNode *node, struct pqueue *res);
+struct pqueue *kd_qinit(unsigned int *q);
 
 #endif                          /* _KDTREE_INTERNAL_H_ */

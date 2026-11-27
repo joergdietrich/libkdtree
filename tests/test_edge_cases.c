@@ -1,9 +1,12 @@
+#include <limits.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include <kdtree_internal.h>
 
 #define NITEMS 100
+#define NPOINTS 200
 
 /* Returns a queue initialized for 0 items, which must grow to hold
    the NITEMS items inserted in scrambled order */
@@ -14,18 +17,56 @@ fill_queue(void)
     struct resItem *item;
     int i;
 
-    if ((q = pqinit(NULL, 0)) == NULL)
+    if ((q = kd_pqinit(NULL, 0)) == NULL)
         exit(EXIT_FAILURE);
     for(i = 0; i < NITEMS; i++) {
-        item = malloc(sizeof(struct resItem));
+        if ((item = malloc(sizeof(struct resItem))) == NULL)
+            exit(EXIT_FAILURE);
         item->node = NULL;
         item->dist_sq = (i * 37) % NITEMS;
-        if (!pqinsert(q, item)) {
+        if (!kd_pqinsert(q, item)) {
             fprintf(stderr, "Insert %d failed\n", i);
             exit(EXIT_FAILURE);
         }
     }
     return q;
+}
+
+/* Checks that asking a tree of NPOINTS points for UINT_MAX nearest
+   neighbors returns all of them */
+static void
+check_all_nearest(int spherical)
+{
+    static struct kd_point points[NPOINTS];
+    static float coords[NPOINTS][2];
+    float min[2] = { 0, -M_PI / 2 }, max[2] = { 2 * M_PI, M_PI / 2 };
+    float p[2] = { 1, 0 }, range = 100;
+    struct kdNode *tree;
+    struct pqueue *res;
+    int i;
+
+    srand48(7);
+    for(i = 0; i < NPOINTS; i++) {
+        coords[i][0] = min[0] + drand48() * (max[0] - min[0]);
+        coords[i][1] = min[1] + drand48() * (max[1] - min[1]);
+        points[i].point = coords[i];
+        points[i].data = NULL;
+    }
+    if (spherical) {
+        tree = kd_sph_buildTree(points, NPOINTS, NULL, NULL, min, max, 1);
+        res = tree ? kd_sph_qnearest(tree, p, &range, UINT_MAX) : NULL;
+    } else {
+        tree = kd_buildTree(points, NPOINTS, NULL, NULL, min, max, 2, 1);
+        res = tree ? kd_qnearest(tree, p, &range, UINT_MAX, 2) : NULL;
+    }
+    if (!res || res->size - 1 != NPOINTS) {
+        fprintf(stderr, "%s q-nearest search for UINT_MAX points found %d\n",
+                spherical ? "Spherical" : "Cartesian",
+                res ? (int) res->size - 1 : -1);
+        exit(EXIT_FAILURE);
+    }
+    pqfree(res);
+    kd_destroyTree(tree, NULL);
 }
 
 int
@@ -54,6 +95,10 @@ main()
         fprintf(stderr, "Tree built without a bounding box\n");
         exit(EXIT_FAILURE);
     }
+
+    /* q + 1 must not wrap around */
+    check_all_nearest(0);
+    check_all_nearest(1);
 
     /* A queue initialized for 0 items still grows, and drains in order */
     q = fill_queue();

@@ -6,10 +6,12 @@ Incompatible changes
 
 - The library version is 1:0:0, so shared builds have the soname
   libkdtree.so.1. Programs built against 0.4.3 must be rebuilt.
-- kdtree.h declares only the public API. Internal functions such as
-  kd_doBuildTree, kd_allocNode and the heap helpers are no longer
-  declared there, and most are no longer exported. kd_freeNode and
-  pqueue.h are gone.
+- kdtree.h declares only the public API, and shared builds export
+  only the functions it declares. Internal functions such as
+  kd_doBuildTree, kd_allocNode, pqinit and pqinsert are no longer
+  available; pqinit and pqinsert are renamed kd_pqinit and
+  kd_pqinsert so they can't clash with a program's own functions.
+  kd_freeNode and pqueue.h are gone.
 - kdtree.h no longer includes pthread.h and string.h. Programs that
   relied on it must include them themselves.
 - kd_destroyTree must be given the root of a tree. A tree is two
@@ -17,7 +19,7 @@ Incompatible changes
 - kd_buildTree and kd_sph_buildTree return NULL for a NaN coordinate,
   a NaN corner of the bounding box, a NULL min or max, or a constr
   that returns NULL for non-NULL data. A failing constr used to leave
-  NULL data in the tree.
+  NULL data in the tree. Every failure prints its reason to stderr.
 
 New
 ---
@@ -34,7 +36,8 @@ Fixes
 - An empty point list returns NULL instead of crashing.
 - Failed allocations during building and searching, and failed
   thread creation during building, are handled instead of ignored.
-- pqinit(q, 0) no longer overflows on the first insert.
+- kd_qnearest and kd_sph_qnearest with q = UINT_MAX return all points
+  in range instead of none.
 - A failed search no longer frees an uninitialized pointer.
 
 Performance

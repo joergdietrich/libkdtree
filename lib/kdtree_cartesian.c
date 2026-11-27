@@ -131,7 +131,7 @@ kd_ortRangeSearch(struct kdNode *node, float *min, float *max, int dim)
 {
     struct pqueue *res;
 
-    if ((res = pqinit(NULL, 1)) == NULL)
+    if ((res = kd_pqinit(NULL, 1)) == NULL)
         return NULL;
     if (!kd_doOrtRangeSearch(node, min, max, dim, res)) {
         pqfree(res);
@@ -251,7 +251,7 @@ kd_nearest(struct kdNode *node, float *p, float *max_dist_sq, int dim)
  * \param max_dist_sq the square of the maximum distance to the
  * nearest neighbors.
  *
- * \param q the maximum number of points to be retured.
+ * \param q the maximum number of points to be returned.
  *
  * \param dim the dimension of the data.
  *
@@ -264,7 +264,7 @@ kd_qnearest(struct kdNode *node, float *p,
 {
     struct pqueue *res;
 
-    if ((res = pqinit(NULL, q + 2)) == NULL)
+    if ((res = kd_qinit(&q)) == NULL)
         return NULL;
     if (!kd_doQnearest(node, p, max_dist_sq, q + 1, dim, res)) {
         pqfree(res);
@@ -300,7 +300,7 @@ kd_doQnearest(struct kdNode *node, float *p,
             return 0;
         point->node = node;
         point->dist_sq = dist_sq;
-        if (!pqinsert(res, point)) {
+        if (!kd_pqinsert(res, point)) {
             free(point);
             return 0;
         }
@@ -371,7 +371,7 @@ kd_range(struct kdNode *node, float *p, float *max_dist_sq,
 {
     struct pqueue *res;
 
-    if ((res = pqinit(NULL, 1)) == NULL)
+    if ((res = kd_pqinit(NULL, 1)) == NULL)
         return NULL;
     if (!kd_doRange(node, p, max_dist_sq, dim, res, ordered)) {
         pqfree(res);
@@ -401,7 +401,7 @@ kd_doRange(struct kdNode *node, float *p, float *max_dist_sq,
             return 0;
         point->node = node;
         point->dist_sq = ordered ? dist_sq : -1;
-        if (!pqinsert(res, point)) {
+        if (!kd_pqinsert(res, point)) {
             free(point);
             return 0;
         }

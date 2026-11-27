@@ -377,7 +377,7 @@ trickle_down_min(struct pqueue *q, uint32_t i)
  * Returns the queue, or NULL on error.
  */
 struct pqueue *
-pqinit(struct pqueue *q, uint32_t n)
+kd_pqinit(struct pqueue *q, uint32_t n)
 {
     struct pqueue *tmp = q;
 
@@ -403,7 +403,7 @@ pqinit(struct pqueue *q, uint32_t n)
  * q is NULL or the queue could not grow.
  */
 int
-pqinsert(struct pqueue *q, struct resItem *d)
+kd_pqinsert(struct pqueue *q, struct resItem *d)
 {
     struct resItem **tmp;
     uint32_t i, newsize;

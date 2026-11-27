@@ -17,14 +17,14 @@ naive_range(struct kd_point *pointlist, unsigned int npoints,
     float dsq;
     unsigned int i;
 
-    if ((res = pqinit(NULL, 1)) == NULL) {
+    if ((res = kd_pqinit(NULL, 1)) == NULL) {
 	fprintf(stderr, "Could not allocate memory for result queue\n.");
 	return NULL;
     }
     for(i=0; i<npoints; i++) {
 	if ((dsq = kd_dist_sq(pointlist[i].point, p, dim)) < *range) {
 	    if ((point = naive_item(pointlist[i].point, dsq)) == NULL ||
-	        !pqinsert(res, point)) {
+	        !kd_pqinsert(res, point)) {
 	        free(point);
 	        pqfree(res);
 	        return NULL;

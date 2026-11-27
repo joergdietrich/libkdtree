@@ -23,14 +23,14 @@ naive_ortRangeSearch(struct kd_point *pointlist, unsigned int npoints,
     struct resItem *point;
     unsigned int i;
 
-    if ((res = pqinit(NULL, 1)) == NULL ) {
+    if ((res = kd_pqinit(NULL, 1)) == NULL ) {
 	fprintf(stderr, "Could not allocate memory for result queue\n.");
 	return NULL;
     }
     for(i=0; i<npoints; i++) {
 	if (is_pointInRect(pointlist[i], rect_min, rect_max, dim)) {
 	    if ((point = naive_item(pointlist[i].point, -1)) == NULL ||
-	        !pqinsert(res, point)) {
+	        !kd_pqinsert(res, point)) {
 	        free(point);
 	        pqfree(res);
 	        return NULL;

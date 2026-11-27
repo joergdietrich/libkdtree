@@ -3,6 +3,8 @@
  *
  */
 
+#include <limits.h>
+
 #include "kdtree_internal.h"
 
 /* Arguments for building a subtree, possibly in its own thread */
@@ -47,6 +49,18 @@ inline int
 kd_isleaf(struct kdNode *n)
 {
     return (n->left || n->right) ? 0 : 1;
+}
+
+/* Returns an empty result queue for a search for the q nearest
+   neighbors. The search compares against q + 1, so q is lowered by one
+   if that would wrap around. Up to 1024 items are allocated up front,
+   and the queue grows from there. */
+struct pqueue *
+kd_qinit(unsigned int *q)
+{
+    if (*q == UINT_MAX)
+        *q = UINT_MAX - 1;
+    return kd_pqinit(NULL, *q < 1024 ? *q + 2 : 1026);
 }
 
 /* end utility functions */
@@ -317,15 +331,27 @@ kd_buildTree(struct kd_point *points, unsigned long nPoints,
     float *coords;
     size_t nnodes, stride;
 
-    if (!points || nPoints == 0 || !min || !max || dim < 1)
+    if (!points || nPoints == 0) {
+        fprintf(stderr, "kd_buildTree: no points\n");
         return NULL;
+    }
+    if (!min || !max) {
+        fprintf(stderr, "kd_buildTree: no bounding box\n");
+        return NULL;
+    }
+    if (dim < 1) {
+        fprintf(stderr, "kd_buildTree: dim must be at least 1\n");
+        return NULL;
+    }
     if (_hasNaN(points, nPoints, dim) || _boxHasNaN(min, max, dim)) {
         fprintf(stderr, "kd_buildTree: NaN coordinate\n");
         return NULL;
     }
     stride = 3 * (size_t) dim;
-    if (nPoints > SIZE_MAX / (2 * stride * sizeof(float)))
+    if (nPoints > SIZE_MAX / (2 * stride * sizeof(float))) {
+        fprintf(stderr, "kd_buildTree: too many points\n");
         return NULL;
+    }
     nnodes = 2 * (size_t) nPoints - 1;
 
     nodes = calloc(nnodes, sizeof *nodes);
@@ -510,7 +536,7 @@ kd_insertResTree(struct kdNode *node, struct pqueue *res)
 
         point->node = node;
         point->dist_sq = -1;
-        if (!pqinsert(res, point)) {
+        if (!kd_pqinsert(res, point)) {
             free(point);
             return 0;
         }

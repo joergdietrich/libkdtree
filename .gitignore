@@ -26,7 +26,12 @@ stamp-h1
 test-driver
 Doxyfile
 
-# Build output
+# Test binaries have no extension. Later rules still ignore the
+# object files and logs among the files re-included here.
+tests/test_*
+!tests/test_*.*
+
+# Build and test output
 *.o
 *.lo
 *.la
@@ -37,11 +42,6 @@ src/example_spherical
 src/nn_cartesian
 src/nn_spherical
 src/*.dat
-
-# Test output
-tests/test_*
-!tests/test_*.c
-!tests/test_*.sh
 *.log
 *.trs
 

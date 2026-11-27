@@ -1,6 +1,7 @@
 AM_CPPFLAGS = -W -Wall -I$(top_srcdir)/lib -I$(top_srcdir)/tests
-LDADD = -lkdtree -lpthread -lm
-AM_LDFLAGS = -L../lib
+# The tests call internal functions, so they link against all of the
+# library's code instead of the installed library.
+LDADD = ../lib/libkdtree_core.la -lpthread -lm
 
 EXTRA_DIST = test_cartesian_nn.sh \
 	test_cartesian_rectangle.sh \
