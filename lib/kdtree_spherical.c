@@ -123,7 +123,8 @@ kd_sph_orth_dist(float *p1, float *p2, int split)
  * \param nPoints the length of the points array.
  *
  * \param constr a pointer to a void *constructor() function to include
- * data container in tree; optional, can be NULL
+ * data container in tree; optional, can be NULL. If it returns NULL
+ * for non-NULL data, the build fails.
  *
  * \param destr a pointer to a void destructor() function to free()
  * data container in the tree; optional, can be NULL, but should be
@@ -139,8 +140,8 @@ kd_sph_orth_dist(float *p1, float *p2, int split)
  * construction of the tree. The threads will be unbalanced if this is
  * not a power of 2.
  *
- * \return root node of the tree, NULL if points is empty or memory
- * runs out
+ * \return root node of the tree, or NULL in the cases listed for
+ * kd_buildTree()
  */
 struct kdNode *
 kd_sph_buildTree(struct kd_point *points, unsigned long nPoints,

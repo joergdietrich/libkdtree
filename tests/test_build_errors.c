@@ -71,6 +71,16 @@ main()
             fprintf(stderr, "Tree built although constr failed\n");
             exit(EXIT_FAILURE);
         }
+        if (nfreed != ncopies - 1) {
+            fprintf(stderr, "%d of %d data copies freed after a failed "
+                    "build\n", nfreed, ncopies - 1);
+            exit(EXIT_FAILURE);
+        }
+        if (nthreads == 1 && ncopies != fail_at) {
+            fprintf(stderr, "constr called %d times after it failed\n",
+                    ncopies - fail_at);
+            exit(EXIT_FAILURE);
+        }
 
         /* With a working constr every point gets its data */
         ncopies = nfreed = 0;

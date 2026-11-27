@@ -307,8 +307,10 @@ kd_buildTree(struct kd_point *points, unsigned long nPoints,
 
     if (!points || nPoints == 0 || !min || !max || dim < 1)
         return NULL;
-    if (_hasNaN(points, nPoints, dim))
+    if (_hasNaN(points, nPoints, dim)) {
+        fprintf(stderr, "kd_buildTree: NaN coordinate\n");
         return NULL;
+    }
     stride = 3 * (size_t) dim;
     if (nPoints > SIZE_MAX / (2 * stride * sizeof(float)))
         return NULL;
@@ -336,6 +338,7 @@ kd_buildTree(struct kd_point *points, unsigned long nPoints,
     arg.max_threads = max_threads;
     arg.dim = dim;
     if (!kd_doBuildTree(&arg)) {
+        fprintf(stderr, "kd_buildTree: constr failed\n");
         kd_destroyTree(nodes, destr);
         return NULL;
     }
@@ -405,7 +408,8 @@ kd_doBuildTree(void *threadarg)
 
     /*
      * Build each child in a new thread if allowed. A child whose
-     * thread cannot be started is built in this thread.
+     * thread cannot be started is built in this thread, unless the
+     * left child has already failed.
      */
     for(i = 0; i < 2; i++)
         threaded[i] = a->max_threads > 1 &&
@@ -414,8 +418,10 @@ kd_doBuildTree(void *threadarg)
         if (threaded[i]) {
             pthread_join(threads[i], &ret);
             child[i] = ret;
-        } else {
+        } else if (i == 0 || child[0]) {
             child[i] = kd_doBuildTree(&arg[i]);
+        } else {
+            child[i] = NULL;
         }
     }
     return child[0] && child[1] ? node : NULL;
