@@ -18,6 +18,17 @@ static int kd_doRange(struct kdNode *node, float *p, float *max_dist_sq,
 
    ********************************************************************* */
 
+/*!
+ * \brief squared Euclidean distance between two points
+ *
+ * \param x the coordinates of the first point.
+ *
+ * \param y the coordinates of the second point.
+ *
+ * \param dim the number of dimensions.
+ *
+ * \return the squared distance, or -1 if x or y is NULL.
+ */
 inline float
 kd_dist_sq(float *x, float *y, int dim)
 {
@@ -333,35 +344,6 @@ kd_doQnearest(struct kdNode *node, float *p,
          */
         if (!kd_doQnearest(further, p, max_dist_sq, q, dim, res))
             return 0;
-        dist_sq = kd_dist_sq(node->location, p, dim);
-
-        if (dist_sq < *max_dist_sq && kd_isleaf(node)) {
-            if ((point = kd_malloc(sizeof(struct resItem), "kd_doQnearest: "))
-                == NULL)
-                return 0;
-            point->node = node;
-            point->dist_sq = dist_sq;
-            if (!pqinsert(res, point)) {
-                free(point);
-                return 0;
-            }
-        }
-        if (res->size > q) {
-            pqremove_max(res, &item);
-            free(item);
-            if (res->size > 1) {
-                /*
-                 * Only inspect the queue if there are items left 
-                 */
-                pqpeek_max(res, &item);
-                *max_dist_sq = item->dist_sq;
-            } else {
-                /*
-                 * Nothing was found within the max search radius 
-                 */
-                *max_dist_sq = 0;
-            }
-        }
     }
     return 1;
 }
@@ -447,20 +429,6 @@ kd_doRange(struct kdNode *node, float *p, float *max_dist_sq,
          */
         if (!kd_doRange(further, p, max_dist_sq, dim, res, ordered))
             return 0;
-        dist_sq = kd_dist_sq(node->location, p, dim);
-
-        if (dist_sq < *max_dist_sq && kd_isleaf(node)) {
-            if ((point = kd_malloc(sizeof(struct resItem), "kd_doRange: "))
-                == NULL)
-                return 0;
-            point->node = node;
-            point->dist_sq = ordered ? dist_sq : -1;
-            if (!pqinsert(res, point)) {
-                free(point);
-                return 0;
-            }
-        }
-
     }
     return 1;
 }

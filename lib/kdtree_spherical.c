@@ -19,8 +19,18 @@ static int kd_sph_doRange(struct kdNode *node, float *p, float *max_dist_sq,
 
    ********************************************************************* */
 
-/* Great-circle distance by the haversine formula, which stays
-   accurate for small separations. */
+/*!
+ * \brief great-circle distance between two points on the sphere
+ *
+ * Uses the haversine formula, which stays accurate for small
+ * separations.
+ *
+ * \param x the first point as (RA, Dec) in radians.
+ *
+ * \param y the second point as (RA, Dec) in radians.
+ *
+ * \return the angular distance in radians, or -1 if x or y is NULL.
+ */
 inline float
 kd_sph_dist(float *x, float *y)
 {
@@ -37,6 +47,18 @@ kd_sph_dist(float *x, float *y)
     return 2 * asin(sqrt(fmin(h, 1.0)));
 }
 
+/*!
+ * \brief squared great-circle distance between two points on the sphere
+ *
+ * The spherical searches compare this value against max_dist_sq.
+ *
+ * \param x the first point as (RA, Dec) in radians.
+ *
+ * \param y the second point as (RA, Dec) in radians.
+ *
+ * \return the squared angular distance in radians², or -1 if x or y
+ * is NULL.
+ */
 inline float
 kd_sph_dist_sq(float *x, float *y)
 {
@@ -505,36 +527,6 @@ kd_sph_doQnearest(struct kdNode *node, float *p, float *max_dist_sq,
          */
         if (!kd_sph_doQnearest(further, p, max_dist_sq, q, res))
             return 0;
-        dist_sq = kd_sph_dist_sq(node->location, p);
-
-        if (dist_sq < *max_dist_sq && kd_isleaf(node)) {
-            if ((point =
-                 kd_malloc(sizeof(struct resItem), "kd_sph_doQnearest: "))
-                == NULL)
-                return 0;
-            point->node = node;
-            point->dist_sq = dist_sq;
-            if (!pqinsert(res, point)) {
-                free(point);
-                return 0;
-            }
-        }
-        if (res->size > q) {
-            pqremove_max(res, &item);
-            free(item);
-            if (res->size > 1) {
-                /*
-                 * Only inspect the queue if there are items left 
-                 */
-                pqpeek_max(res, &item);
-                *max_dist_sq = item->dist_sq;
-            } else {
-                /*
-                 * Nothing was found within the max search radius 
-                 */
-                *max_dist_sq = 0;
-            }
-        }
     }
     return 1;
 }
@@ -637,21 +629,6 @@ kd_sph_doRange(struct kdNode *node, float *p, float *max_dist_sq,
          */
         if (!kd_sph_doRange(further, p, max_dist_sq, res, ordered))
             return 0;
-        dist_sq = kd_sph_dist_sq(node->location, p);
-
-        if (dist_sq < *max_dist_sq && kd_isleaf(node)) {
-            if ((point =
-                 kd_malloc(sizeof(struct resItem), "kd_sph_doRange: "))
-                == NULL)
-                return 0;
-            point->node = node;
-            point->dist_sq = ordered ? dist_sq : -1;
-            if (!pqinsert(res, point)) {
-                free(point);
-                return 0;
-            }
-        }
-
     }
     return 1;
 }

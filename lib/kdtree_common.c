@@ -57,6 +57,17 @@ kd_isleaf(struct kdNode *n)
 
    ******************************************************************* */
 
+/*!
+ * \brief print a node to stdout for debugging
+ *
+ * Prints the node's address, location, split axis, bounding box and
+ * children. Only the first two coordinates are shown.
+ *
+ * \param node the node to print. A NULL node prints a notice to stderr.
+ *
+ * \param printData a function that prints the node's data, or NULL to
+ * print the data pointer instead.
+ */
 void
 kd_printNode(struct kdNode *node, void (*printData) (void *))
 {
@@ -80,6 +91,14 @@ kd_printNode(struct kdNode *node, void (*printData) (void *))
 
 }
 
+/*!
+ * \brief print the points of a tree to stdout for debugging
+ *
+ * Prints the first two coordinates of each point, one point per line,
+ * in tree order.
+ *
+ * \param node the root of the tree, or of the subtree, to print.
+ */
 void
 kd_printTree(struct kdNode *node)
 {
