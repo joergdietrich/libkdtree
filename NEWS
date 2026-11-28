@@ -6,12 +6,11 @@ Incompatible changes
 
 - The library version is 1:0:0, so shared builds have the soname
   libkdtree.so.1. Programs built against 0.4.3 must be rebuilt.
-- kdtree.h declares only the public API, and shared builds export
-  only the functions it declares. Internal functions such as
-  kd_doBuildTree, kd_allocNode, pqinit and pqinsert are no longer
-  available; pqinit and pqinsert are renamed kd_pqinit and
-  kd_pqinsert so they can't clash with a program's own functions.
-  kd_freeNode and pqueue.h are gone.
+- kdtree.h declares only the public API, and the static and shared
+  libraries export only the functions it declares. Internal functions
+  such as kd_doBuildTree, kd_allocNode, pqinit and pqinsert are no
+  longer available. kd_freeNode and pqueue.h are gone.
+- struct pqueue no longer has a step field.
 - kdtree.h no longer includes pthread.h and string.h. Programs that
   relied on it must include them themselves.
 - kd_destroyTree must be given the root of a tree. A tree is two
@@ -19,7 +18,8 @@ Incompatible changes
 - kd_buildTree and kd_sph_buildTree return NULL for a NaN coordinate,
   a NaN corner of the bounding box, a NULL min or max, or a constr
   that returns NULL for non-NULL data. A failing constr used to leave
-  NULL data in the tree. Every failure prints its reason to stderr.
+  NULL data in the tree. Every failure prints its reason to stderr,
+  prefixed with "libkdtree:".
 
 New
 ---
@@ -46,6 +46,8 @@ Performance
 - Trees are built with quickselect instead of sorting every level.
   A million random 2-d points build about six times faster.
 - A tree takes two allocations instead of about three per node.
+- Result queues double in size when they fill up. A range search
+  returning n points used to reallocate its queue n times.
 
 Documentation
 -------------

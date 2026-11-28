@@ -53,14 +53,14 @@ kd_isleaf(struct kdNode *n)
 
 /* Returns an empty result queue for a search for the q nearest
    neighbors. The search compares against q + 1, so q is lowered by one
-   if that would wrap around. Up to 1024 items are allocated up front,
-   and the queue grows from there. */
+   if that would wrap around. The queue starts with room for the q + 1
+   items, or with 1024 slots if q is larger, and doubles as it fills. */
 struct pqueue *
 kd_qinit(unsigned int *q)
 {
     if (*q == UINT_MAX)
         *q = UINT_MAX - 1;
-    return kd_pqinit(NULL, *q < 1024 ? *q + 2 : 1026);
+    return kd_pqinit(NULL, *q < 1022 ? *q + 2 : 1024);
 }
 
 /* end utility functions */
@@ -332,24 +332,24 @@ kd_buildTree(struct kd_point *points, unsigned long nPoints,
     size_t nnodes, stride;
 
     if (!points || nPoints == 0) {
-        fprintf(stderr, "kd_buildTree: no points\n");
+        fprintf(stderr, "libkdtree: no points\n");
         return NULL;
     }
     if (!min || !max) {
-        fprintf(stderr, "kd_buildTree: no bounding box\n");
+        fprintf(stderr, "libkdtree: no bounding box\n");
         return NULL;
     }
     if (dim < 1) {
-        fprintf(stderr, "kd_buildTree: dim must be at least 1\n");
+        fprintf(stderr, "libkdtree: dim must be at least 1\n");
         return NULL;
     }
     if (_hasNaN(points, nPoints, dim) || _boxHasNaN(min, max, dim)) {
-        fprintf(stderr, "kd_buildTree: NaN coordinate\n");
+        fprintf(stderr, "libkdtree: NaN coordinate\n");
         return NULL;
     }
     stride = 3 * (size_t) dim;
     if (nPoints > SIZE_MAX / (2 * stride * sizeof(float))) {
-        fprintf(stderr, "kd_buildTree: too many points\n");
+        fprintf(stderr, "libkdtree: too many points\n");
         return NULL;
     }
     nnodes = 2 * (size_t) nPoints - 1;
@@ -357,7 +357,7 @@ kd_buildTree(struct kd_point *points, unsigned long nPoints,
     nodes = calloc(nnodes, sizeof *nodes);
     coords = malloc(nnodes * stride * sizeof *coords);
     if (!nodes || !coords) {
-        perror("kd_buildTree");
+        perror("libkdtree");
         free(nodes);
         free(coords);
         return NULL;
@@ -376,7 +376,7 @@ kd_buildTree(struct kd_point *points, unsigned long nPoints,
     arg.max_threads = max_threads;
     arg.dim = dim;
     if (!kd_doBuildTree(&arg)) {
-        fprintf(stderr, "kd_buildTree: constr failed\n");
+        fprintf(stderr, "libkdtree: constr failed\n");
         kd_destroyTree(nodes, destr);
         return NULL;
     }
@@ -463,33 +463,6 @@ kd_doBuildTree(void *threadarg)
         }
     }
     return child[0] && child[1] ? node : NULL;
-}
-
-/* Allocates a single node outside any tree, with its location at
-   points[pivot] and its box from min to max. Returns NULL if memory
-   runs out. kd_destroyTree() frees the node. */
-struct kdNode *
-kd_allocNode(struct kd_point *points, unsigned long pivot,
-             float *min, float *max, int axis, int dim)
-{
-    struct kdNode *node;
-    float *coords;
-
-    if ((node = kd_malloc(sizeof(kdNode), "kd_allocNode (node): ")) == NULL)
-        return NULL;
-    if ((coords = kd_malloc(3 * dim * sizeof(float),
-                            "kd_allocNode (coords): ")) == NULL) {
-        free(node);
-        return NULL;
-    }
-    _placeNode(node, coords, dim);
-    memcpy(node->location, points[pivot].point, dim * sizeof(float));
-    memcpy(node->min, min, dim * sizeof(float));
-    memcpy(node->max, max, dim * sizeof(float));
-    node->left = node->right = NULL;
-    node->data = NULL;
-    node->split = axis;
-    return node;
 }
 
 /*!

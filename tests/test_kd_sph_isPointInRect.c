@@ -126,7 +126,9 @@ main()
     for(i = 0; i < NTESTS; i++) {
 	point->point[0] = pointList[i][0];
 	point->point[1] = pointList[i][1];
-	node = kd_allocNode(point, 0, point->point, point->point, 0, 2);
+	if ((node = kd_buildTree(point, 1, NULL, NULL, point->point,
+				 point->point, 2, 1)) == NULL)
+	    exit(EXIT_FAILURE);
 	if (truthList[i] != kd_sph_isPointInRect(node, minList[i], 
 						 maxList[i])) {
 	    fprintf(stderr, "Test %d, Point (%.3f, %.3f)\n", i, 

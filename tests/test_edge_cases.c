@@ -9,12 +9,14 @@
 #define NPOINTS 200
 
 /* Returns a queue initialized for 0 items, which must grow to hold
-   the NITEMS items inserted in scrambled order */
+   the NITEMS items inserted in scrambled order. Each growth must at
+   least double the queue. */
 static struct pqueue *
 fill_queue(void)
 {
     struct pqueue *q;
     struct resItem *item;
+    uint32_t avail;
     int i;
 
     if ((q = kd_pqinit(NULL, 0)) == NULL)
@@ -24,8 +26,14 @@ fill_queue(void)
             exit(EXIT_FAILURE);
         item->node = NULL;
         item->dist_sq = (i * 37) % NITEMS;
+        avail = q->avail;
         if (!kd_pqinsert(q, item)) {
             fprintf(stderr, "Insert %d failed\n", i);
+            exit(EXIT_FAILURE);
+        }
+        if (q->avail != avail && q->avail < 2 * avail) {
+            fprintf(stderr, "Queue grew from %u to only %u slots\n",
+                    avail, q->avail);
             exit(EXIT_FAILURE);
         }
     }
