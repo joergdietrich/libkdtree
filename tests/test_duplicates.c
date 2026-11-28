@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <kdtree_internal.h>
+#include <kdtree.h>
 
 #define NPOINTS 20000
 #define NQUERIES 200
@@ -47,6 +47,8 @@ check(float (*coords)[2], const char *name, int nthreads)
             break;
         }
         if ((res = kd_range(tree, q, &radius_sq, 2, KD_UNORDERED)) == NULL) {
+            fprintf(stderr, "%s, %d threads: range search failed\n",
+                    name, nthreads);
             failed = 1;
             break;
         }

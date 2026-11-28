@@ -1,6 +1,6 @@
 #include <stdlib.h>
 
-#include <kdtree_internal.h>
+#include <kdtree.h>
 
 #include "kdtree_test.h"
 
@@ -20,11 +20,24 @@ create_pointlist(unsigned long npoints, float *min, float *max,
 
     for(i = 0; i < npoints; i++) {
         pointlist[i].point = malloc(dim * sizeof(float));
-	if (!pointlist[i].point)
+	if (!pointlist[i].point) {
+	    free_pointlist(pointlist, i);
 	    return NULL;
+	}
         pointlist[i].data = NULL;
         for(j = 0; j < dim; j++)
             pointlist[i].point[j] = drand48() * (max[j] - min[j]) + min[j];
     }
     return pointlist;
+}
+
+
+void
+free_pointlist(struct kd_point *pointlist, unsigned long npoints)
+{
+    unsigned long i;
+
+    for(i = 0; i < npoints; i++)
+	free(pointlist[i].point);
+    free(pointlist);
 }

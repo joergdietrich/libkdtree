@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <kdtree_internal.h>
+#include <kdtree.h>
 
 #include "kdtree_test.h"
 
@@ -91,5 +91,7 @@ main(int argc, char **argv)
 	    }
         }
     }
+    kd_destroyTree(kdTree, NULL);
+    free_pointlist(pointlist, npoints);
     return 0;
 }

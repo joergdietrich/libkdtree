@@ -1,0 +1,60 @@
+libkdtree 0.5.0
+===============
+
+Incompatible changes
+--------------------
+
+- The library version is 1:0:0, so shared builds have the soname
+  libkdtree.so.1. Programs built against 0.4.3 must be rebuilt.
+- kdtree.h declares only the public API, and the static and shared
+  libraries export only the functions it declares. Internal functions
+  such as kd_doBuildTree, kd_allocNode, pqinit and pqinsert are no
+  longer available. kd_freeNode and pqueue.h are gone.
+- struct pqueue no longer has a step field.
+- kdtree.h no longer includes pthread.h and string.h. Programs that
+  relied on it must include them themselves.
+- kd_destroyTree must be given the root of a tree. A tree is two
+  blocks of memory, so a subtree can no longer be freed on its own.
+- kd_buildTree and kd_sph_buildTree return NULL for a NaN coordinate,
+  a NaN corner of the bounding box, a NULL min or max, or a constr
+  that returns NULL for non-NULL data. A failing constr used to leave
+  NULL data in the tree. Every failure prints its reason to stderr,
+  prefixed with "libkdtree:".
+
+New
+---
+
+- pqfree() frees a result queue and the items still in it.
+
+Fixes
+-----
+
+- Spherical distances no longer turn into NaN for identical or
+  antipodal points, so searches no longer drop exact matches.
+- Spherical searches near RA = 0 find all points (GitHub issue #1).
+- Building with several threads no longer races in the sort.
+- An empty point list returns NULL instead of crashing.
+- Failed allocations during building and searching, and failed
+  thread creation during building, are handled instead of ignored.
+- kd_qnearest and kd_sph_qnearest with q = UINT_MAX return all points
+  in range instead of none.
+- A failed search no longer frees an uninitialized pointer.
+- The shared library records its dependency on libm, so programs
+  link with -lkdtree alone.
+
+Performance
+-----------
+
+- Trees are built with quickselect instead of sorting every level.
+  A million random 2-d points build about six times faster.
+- A tree takes two allocations instead of about three per node.
+- Result queues double in size when they fill up. A range search
+  returning n points used to reallocate its queue n times.
+
+Documentation
+-------------
+
+- The reference documentation is expanded, with nearest-neighbor
+  examples, and published at https://joergdietrich.github.io/libkdtree/
+- The docs of kd_qnearest and kd_sph_qnearest say when they shrink
+  the search radius passed in.

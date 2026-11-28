@@ -74,7 +74,9 @@ main()
     for(i = 0; i < NTESTS; i++) {
 	point->point[0] = minListTest[i][0];
 	point->point[1] = minListTest[i][1];
-	node = kd_allocNode(point, 0, minListTest[i], maxListTest[i], 0, 2);
+	if ((node = kd_buildTree(point, 1, NULL, NULL, minListTest[i],
+				 maxListTest[i], 2, 1)) == NULL)
+	    return 1;
 	if (truthList[i] != kd_sph_isRectInRect(node, minList[i],
 						maxList[i])) {
 	    fprintf(stderr, "Rectangle (%.3f, %.3f) (%.3f, %.3f)\n",
@@ -86,7 +88,9 @@ main()
 	    fprintf(stderr, "Expected truth value: %d\n", truthList[i]);
 	    return 1;
 	}
+	kd_destroyTree(node, NULL);
     }
-
+    free(point->point);
+    free(point);
     return 0;
 }

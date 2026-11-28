@@ -56,7 +56,6 @@ typedef struct resItem {
 typedef struct pqueue {
     uint32_t size;              /*!<current length of the queue */
     uint32_t avail;             /*!<currently allocated queue elements */
-    uint32_t step;              /*!<step size in which new elements are allocated */
     struct resItem **d;         /*!<pointer to an array of result items */
 } pqueue;
 

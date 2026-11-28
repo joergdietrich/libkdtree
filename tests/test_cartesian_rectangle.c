@@ -81,5 +81,7 @@ main(int argc, char **argv)
 	    }
 	}
     }
+    kd_destroyTree(kdTree, NULL);
+    free_pointlist(pointlist, npoints);
     return 0;
 }

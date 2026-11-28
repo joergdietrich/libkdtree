@@ -19,23 +19,18 @@ naive_qnearest(struct kd_point *pointlist, unsigned int npoints,
     float dsq;
     unsigned int i;
 
-    if ((res = pqinit(NULL, q + 2)) == NULL) {
+    if ((res = kd_pqinit(NULL, q + 2)) == NULL) {
 	fprintf(stderr, "Could not allocate memory for result queue\n.");
 	return NULL;
     }
     for(i=0; i<npoints; i++) {
 	if ((dsq = kd_dist_sq(pointlist[i].point, p, dim)) < *range) {
-	    if ((point = kd_malloc(sizeof(struct resItem), "naive_qnearest: "))
-		== NULL)
-		return NULL;
-	    if ((point->node = kd_allocNode(pointlist, i, 
-					    /* 2 dummies */
-					    pointlist[i].point, 
-					    pointlist[i].point,
-					    -1, dim)) == NULL)
-		return NULL;
-	    point->dist_sq = dsq;
-	    pqinsert(res, point);
+	    if ((point = naive_item(pointlist[i].point, dsq)) == NULL ||
+	        !kd_pqinsert(res, point)) {
+	        free(point);
+	        pqfree(res);
+	        return NULL;
+	    }
 	}
 	if (res->size > q + 1) {
 	    pqremove_max(res, &item);
@@ -122,5 +117,7 @@ main(int argc, char **argv)
 	    }
 	}
     }
+    kd_destroyTree(kdTree, NULL);
+    free_pointlist(pointlist, npoints);
     return 0;
 }

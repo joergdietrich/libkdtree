@@ -372,16 +372,15 @@ trickle_down_min(struct pqueue *q, uint32_t i)
 
 /*
  * Initializes the priority queue q, or allocates a new one if q is
- * NULL. Memory for n items is allocated up front, and the queue grows
- * by another n items whenever it fills up. An n of 0 counts as 1.
+ * NULL. Slot 0 is unused, so the n slots allocated up front hold n - 1
+ * items. The queue doubles whenever it fills up. An n of 0 counts as 1.
  * Returns the queue, or NULL on error.
  */
 struct pqueue *
-pqinit(struct pqueue *q, uint32_t n)
+kd_pqinit(struct pqueue *q, uint32_t n)
 {
     struct pqueue *tmp = q;
 
-    /* The queue grows in steps of n, so n must not be 0 */
     if (n == 0)
         n = 1;
     if (!q && !(q = malloc(sizeof(struct pqueue)))) {
@@ -392,7 +391,7 @@ pqinit(struct pqueue *q, uint32_t n)
             free(q);
         return NULL;
     }
-    q->avail = q->step = n;
+    q->avail = n;
     q->size = 1;
     return q;
 }
@@ -403,22 +402,22 @@ pqinit(struct pqueue *q, uint32_t n)
  * q is NULL or the queue could not grow.
  */
 int
-pqinsert(struct pqueue *q, struct resItem *d)
+kd_pqinsert(struct pqueue *q, struct resItem *d)
 {
     struct resItem **tmp;
     uint32_t i, newsize;
+    size_t bytes;
 
     if (!q)
         return 0;
 
-    /*
-     * allocate more memory if necessary 
-     */
     if (q->size >= q->avail) {
-        newsize = q->size + q->step;
-        if (!(tmp = realloc(q->d, sizeof(struct resItem *) * newsize))) {
+        if (q->avail == UINT32_MAX)
             return 0;
-        };
+        newsize = q->avail > UINT32_MAX / 2 ? UINT32_MAX : 2 * q->avail;
+        bytes = sizeof *tmp * (size_t) newsize;
+        if (bytes / sizeof *tmp != newsize || !(tmp = realloc(q->d, bytes)))
+            return 0;
         q->d = tmp;
         q->avail = newsize;
     }

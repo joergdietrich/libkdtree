@@ -118,12 +118,13 @@ kd_sph_orth_dist(float *p1, float *p2, int split)
 /*! \brief build kd-tree structure
  *
  * \param points an array of kd_points (struct with position vector
- * and data container).
+ * and data container). The array is reordered.
  *
  * \param nPoints the length of the points array.
  *
  * \param constr a pointer to a void *constructor() function to include
- * data container in tree; optional, can be NULL
+ * data container in tree; optional, can be NULL. If it returns NULL
+ * for non-NULL data, the build fails.
  *
  * \param destr a pointer to a void destructor() function to free()
  * data container in the tree; optional, can be NULL, but should be
@@ -139,8 +140,8 @@ kd_sph_orth_dist(float *p1, float *p2, int split)
  * construction of the tree. The threads will be unbalanced if this is
  * not a power of 2.
  *
- * \return root node of the tree, NULL if points is empty or memory
- * runs out
+ * \return root node of the tree, or NULL in the cases listed for
+ * kd_buildTree()
  */
 struct kdNode *
 kd_sph_buildTree(struct kd_point *points, unsigned long nPoints,
@@ -275,7 +276,7 @@ kd_sph_ortRangeSearch(struct kdNode *node, float *min, float *max)
 {
     struct pqueue *res;
 
-    if ((res = pqinit(NULL, 1)) == NULL)
+    if ((res = kd_pqinit(NULL, 1)) == NULL)
         return NULL;
     if (!kd_sph_doOrtRangeSearch(node, min, max, res)) {
         pqfree(res);
@@ -417,10 +418,13 @@ kd_sph_nearest(struct kdNode *node, float *p, float *max_dist_sq)
  * \param max_dist_sq the square of the maximum distance to the
  * nearest neighbors.
  *
- * \param q the maximum number of points to be retured.
+ * \param q the maximum number of points to be returned.
  *
  * \return A pointer to a priority queue of the points found, or NULL
- * in case of problems.
+ * in case of problems. If more than q points lie within max_dist_sq,
+ * it is set to the square of the distance to the farthest point
+ * returned; otherwise it is left unchanged. Reset it before reusing it
+ * for another search.
  */
 struct pqueue *
 kd_sph_qnearest(struct kdNode *node, float *p,
@@ -428,7 +432,7 @@ kd_sph_qnearest(struct kdNode *node, float *p,
 {
     struct pqueue *res;
 
-    if ((res = pqinit(NULL, q + 2)) == NULL)
+    if ((res = kd_qinit(&q)) == NULL)
         return NULL;
     if (!kd_sph_doQnearest(node, p, max_dist_sq, q + 1, res)) {
         pqfree(res);
@@ -465,7 +469,7 @@ kd_sph_doQnearest(struct kdNode *node, float *p, float *max_dist_sq,
             return 0;
         point->node = node;
         point->dist_sq = dist_sq;
-        if (!pqinsert(res, point)) {
+        if (!kd_pqinsert(res, point)) {
             free(point);
             return 0;
         }
@@ -552,7 +556,7 @@ kd_sph_range(struct kdNode *node, float *p, float *max_dist_sq, int ordered)
 {
     struct pqueue *res;
 
-    if ((res = pqinit(NULL, 1)) == NULL)
+    if ((res = kd_pqinit(NULL, 1)) == NULL)
         return NULL;
     if (!kd_sph_doRange(node, p, max_dist_sq, res, ordered)) {
         pqfree(res);
@@ -583,7 +587,7 @@ kd_sph_doRange(struct kdNode *node, float *p, float *max_dist_sq,
             return 0;
         point->node = node;
         point->dist_sq = ordered ? dist_sq : -1;
-        if (!pqinsert(res, point)) {
+        if (!kd_pqinsert(res, point)) {
             free(point);
             return 0;
         }
