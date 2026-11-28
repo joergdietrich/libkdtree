@@ -39,6 +39,8 @@ Fixes
 - kd_qnearest and kd_sph_qnearest with q = UINT_MAX return all points
   in range instead of none.
 - A failed search no longer frees an uninitialized pointer.
+- The shared library records its dependency on libm, so programs
+  link with -lkdtree alone.
 
 Performance
 -----------
@@ -54,3 +56,5 @@ Documentation
 
 - The reference documentation is expanded, with nearest-neighbor
   examples, and published at https://joergdietrich.github.io/libkdtree/
+- The docs of kd_qnearest and kd_sph_qnearest say when they shrink
+  the search radius passed in.

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <kdtree_internal.h>
+#include <kdtree.h>
 
 #define NPOINTS 20000
 #define NQUERIES 200

@@ -47,6 +47,8 @@ src/*.dat
 
 # Documentation
 doxygen-doc/
+html/
+latex/
 texput.log
 
 # Distribution

@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <kdtree_internal.h>
+#include <kdtree.h>
 
 #include "kdtree_test.h"
 

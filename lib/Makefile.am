@@ -17,6 +17,7 @@ libkdtree_core_la_SOURCES = kdtree_common.c kdtree_cartesian.c \
 # same sources as one file with the internals static.
 lib_LTLIBRARIES = libkdtree.la
 libkdtree_la_SOURCES = kdtree_all.c
+libkdtree_la_LIBADD = -lpthread -lm
 libkdtree_la_LDFLAGS = $(AM_LDFLAGS) -version-info 1:0:0
 
 include_HEADERS = kdtree.h

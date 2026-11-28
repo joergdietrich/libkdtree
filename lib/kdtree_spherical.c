@@ -421,7 +421,10 @@ kd_sph_nearest(struct kdNode *node, float *p, float *max_dist_sq)
  * \param q the maximum number of points to be returned.
  *
  * \return A pointer to a priority queue of the points found, or NULL
- * in case of problems.
+ * in case of problems. If more than q points lie within max_dist_sq,
+ * it is set to the square of the distance to the farthest point
+ * returned; otherwise it is left unchanged. Reset it before reusing it
+ * for another search.
  */
 struct pqueue *
 kd_sph_qnearest(struct kdNode *node, float *p,
