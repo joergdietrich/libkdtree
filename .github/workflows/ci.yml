@@ -1,0 +1,94 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Linux jobs run on the self-hosted runner, which has the autotools,
+  # gcc with its sanitizers, and setarch installed.
+  linux:
+    name: Linux ${{ matrix.name }}
+    runs-on: [self-hosted, Linux, X64, libkdtree]
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: static
+            configure: ""
+            distcheck: true
+          - name: shared
+            configure: --enable-shared --disable-static
+          - name: ASan+UBSan
+            configure: >-
+              CFLAGS="-g -O1 -fno-omit-frame-pointer
+              -fsanitize=address,undefined -fno-sanitize-recover=undefined"
+          - name: TSan
+            configure: CFLAGS="-g -O1 -fsanitize=thread"
+            # TSan programs, including configure's compiler check, need
+            # a fixed memory layout on kernels with high mmap randomization
+            wrap: setarch x86_64 -R
+    env:
+      ASAN_OPTIONS: detect_leaks=1
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Configure
+        run: |
+          autoreconf -fi
+          eval ${{ matrix.wrap }} ./configure ${{ matrix.configure }}
+
+      - name: Build
+        run: make -j"$(nproc)"
+
+      - name: Test
+        run: ${{ matrix.wrap }} make check
+
+      - name: Distcheck
+        if: matrix.distcheck
+        run: make distcheck
+
+      - name: Show test logs
+        if: failure()
+        run: tail -n +1 tests/*.log
+
+  macos:
+    name: macOS
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install tools
+        run: brew install autoconf automake libtool
+
+      # Homebrew installs libtoolize as glibtoolize
+      - name: Configure
+        env:
+          LIBTOOLIZE: glibtoolize
+        run: |
+          autoreconf -fi
+          ./configure
+
+      - name: Build
+        run: make -j"$(sysctl -n hw.ncpu)"
+
+      - name: Test
+        run: make check
+
+      - name: Distcheck
+        run: make distcheck
+
+      - name: Show test logs
+        if: failure()
+        run: tail -n +1 tests/*.log
