@@ -25,16 +25,15 @@ jobs:
       matrix:
         include:
           - name: static
-            configure: ""
             distcheck: true
           - name: shared
             configure: --enable-shared --disable-static
           - name: ASan+UBSan
-            configure: >-
-              CFLAGS="-g -O1 -fno-omit-frame-pointer
-              -fsanitize=address,undefined -fno-sanitize-recover=undefined"
+            cflags: >-
+              -g -O1 -fno-omit-frame-pointer
+              -fsanitize=address,undefined -fno-sanitize-recover=undefined
           - name: TSan
-            configure: CFLAGS="-g -O1 -fsanitize=thread"
+            cflags: -g -O1 -fsanitize=thread
             # TSan programs, including configure's compiler check, need
             # a fixed memory layout on kernels with high mmap randomization
             wrap: setarch x86_64 -R
@@ -46,7 +45,8 @@ jobs:
       - name: Configure
         run: |
           autoreconf -fi
-          eval ${{ matrix.wrap }} ./configure ${{ matrix.configure }}
+          ${{ matrix.wrap }} ./configure ${{ matrix.configure }} \
+            CFLAGS="${{ matrix.cflags || '-g -O2' }}"
 
       - name: Build
         run: make -j"$(nproc)"
@@ -58,9 +58,9 @@ jobs:
         if: matrix.distcheck
         run: make distcheck
 
-      - name: Show test logs
+      - name: Show logs
         if: failure()
-        run: tail -n +1 tests/*.log
+        run: tail -n +1 tests/*.log || tail -n 50 config.log
 
   macos:
     name: macOS
@@ -89,6 +89,6 @@ jobs:
       - name: Distcheck
         run: make distcheck
 
-      - name: Show test logs
+      - name: Show logs
         if: failure()
-        run: tail -n +1 tests/*.log
+        run: tail -n +1 tests/*.log || tail -n 50 config.log
